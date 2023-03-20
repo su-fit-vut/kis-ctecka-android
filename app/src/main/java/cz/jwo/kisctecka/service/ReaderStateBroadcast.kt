@@ -30,6 +30,9 @@ sealed class ReaderStateBroadcast : Parcelable {
     @Parcelize
     data class ReaderModeChanged(val readerMode: ReaderMode) : ReaderStateBroadcast()
 
+    @Parcelize
+    data class ConnectionStateChange(val open: Boolean) : ReaderStateBroadcast()
+
     companion object {
         const val ACTION = "cz.jwo.kisctecka.ReaderStateBroadcast.EVENT"
         const val EXTRA_EVENT = "cz.jwo.kisctecka.ReaderStateBroadcast.EXTRA_EVENT"

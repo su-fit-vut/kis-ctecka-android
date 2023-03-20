@@ -19,6 +19,7 @@ import cz.jwo.kisctecka.service.ReaderService
 import cz.jwo.kisctecka.service.ReaderServiceCommand
 import cz.jwo.kisctecka.service.ReaderStateBroadcast
 import kotlinx.coroutines.*
+import java.net.NetworkInterface
 
 
 private const val TAG = "MainActivity"
@@ -123,7 +124,8 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun onReaderInit() {
-        showPermanentStatus(getString(R.string.status_reader_init_done))
+        showReaderAddress()
+        showTemporaryStatus(getString(R.string.status_reader_init_done))
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -151,8 +153,45 @@ class MainActivity : AppCompatActivity() {
                 is ReaderStateBroadcast.ReaderInit -> onReaderInit()
                 is ReaderStateBroadcast.CardReadStatus -> onCardStatusChange(broadcast)
                 is ReaderStateBroadcast.ReaderModeChanged -> onReaderModeChanged(broadcast.readerMode)
+                is ReaderStateBroadcast.ConnectionStateChange -> onConnectionStateChange(broadcast)
             }
         }
+    }
+
+    private fun onConnectionStateChange(connectionStateChange: ReaderStateBroadcast.ConnectionStateChange) {
+        when (connectionStateChange.open) {
+            true -> {
+                showPermanentStatus(getString(R.string.status_idle))
+            }
+
+            false -> {
+                showReaderAddress()
+                showTemporaryStatus(getString(R.string.status_disconnected))
+            }
+        }
+    }
+
+    private fun showReaderAddress() {
+        showPermanentStatus(
+            createCurrentAddress()?.let { addr ->
+                getString(R.string.status_reader_name, addr)
+            } ?: getString(R.string.status_disconnected_no_address)
+        )
+    }
+
+    private fun createCurrentAddress(): String? {
+        Log.d(TAG, "Trying to get current address.")
+        NetworkInterface.getNetworkInterfaces().toList().forEach { networkInterface ->
+            Log.d(TAG, "  • if: ${networkInterface.name}")
+            networkInterface.interfaceAddresses.forEach { interfaceAddress ->
+                val addressString = interfaceAddress.address.hostAddress
+                Log.d(TAG, "      • addr: $addressString")
+                if (addressString.startsWith("10.10.20.")) {
+                    return addressString
+                }
+            }
+        }
+        return null
     }
 
     private fun onReaderModeChanged(readerMode: ReaderMode) {
@@ -163,7 +202,7 @@ class MainActivity : AppCompatActivity() {
                     ReaderMode.ContinuousRead -> R.string.status_reading
                     ReaderMode.SingleReadAuth -> R.string.status_reading
                     ReaderMode.AuthUseKey -> R.string.status_reading
-                    ReaderMode.Idle ->R.string.status_idle
+                    ReaderMode.Idle -> R.string.status_idle
                 }
             )
         )

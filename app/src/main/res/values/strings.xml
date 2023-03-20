@@ -8,4 +8,7 @@
     <string name="status_card_reading_success">Success</string>
     <string name="status_reading">Waiting for a card</string>
     <string name="status_idle">Connected</string>
+    <string name="status_disconnected">Disconnected</string>
+    <string name="status_reader_name">Reader: %s</string>
+    <string name="status_disconnected_no_address">Disconnected (unknown address)</string>
 </resources>

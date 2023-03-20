@@ -37,6 +37,10 @@ class ReaderService : Service(), ClientCommandReceiver {
         this.readerMode = readerMode
     }
 
+    override fun connectionStateChanged(open: Boolean) {
+        sendBroadcast(ReaderStateBroadcast.ConnectionStateChange(open=open))
+    }
+
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         if (intent.action == ReaderServiceCommand.ACTION) {
             val command = ReaderServiceCommand.fromIntent(intent)

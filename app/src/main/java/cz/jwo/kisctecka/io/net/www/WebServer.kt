@@ -17,6 +17,7 @@ import io.ktor.websocket.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlin.properties.Delegates
 
 const val TAG = "WebServer"
 
@@ -34,11 +35,19 @@ class WebServer(private val commandReceiver: ClientCommandReceiver) {
                 call.respondText("KIS Čtečka")
             }
             webSocket("/") {
+                wsSession?.close(CloseReason(CloseReason.Codes.NORMAL, "another client connected"))
+                wsSession = null
                 handleWebSocket()
             }
         }
     }
-    private var wsSession: DefaultWebSocketServerSession? = null
+    private var wsSession: DefaultWebSocketServerSession? by Delegates.observable(null) { _, old, new ->
+        if (old == null && new != null) {
+            commandReceiver.connectionStateChanged(open=true)
+        } else if (old != null && new==null) {
+            commandReceiver.connectionStateChanged(open=false)
+        }
+    }
 
     fun start(wait: Boolean) {
         server.start(wait)
@@ -50,6 +59,8 @@ class WebServer(private val commandReceiver: ClientCommandReceiver) {
         wsSession = this
 
         for (frame in incoming) {
+            Log.d(TAG, "WS: Received frame ${frame.frameType}")
+
             Log.d(TAG, "WS: Incoming data")
             Log.d(TAG, "WS: Data length: ${frame.buffer.limit()} (should be 35)")
             val packet = RawDataPacket.deserialize(frame.data)
@@ -66,6 +77,9 @@ class WebServer(private val commandReceiver: ClientCommandReceiver) {
                 MessageCodeToReader.SINGLE_AUTH_KEY -> processSingleAuthKey()
             }
         }
+
+        Log.d(TAG, "WS: Connection closed")
+        wsSession = null
     }
 
 
