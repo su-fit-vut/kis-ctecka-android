@@ -187,7 +187,7 @@ class MainActivity : AppCompatActivity() {
                 val addressString = interfaceAddress.address.hostAddress
                 Log.d(TAG, "      • addr: $addressString")
                 if (addressString.startsWith("10.10.20.")) {
-                    return addressString
+                    return "wis.vut.cy/ctecka/${addressString.split('.').last()} ($addressString)"
                 }
             }
         }
