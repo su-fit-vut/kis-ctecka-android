@@ -17,15 +17,21 @@ import androidx.appcompat.app.AppCompatActivity
 import cz.jwo.kisctecka.service.ReaderService
 import cz.jwo.kisctecka.service.ReaderServiceCommand
 import cz.jwo.kisctecka.service.ReaderStateBroadcast
+import kotlinx.coroutines.*
 
 
 private const val TAG = "MainActivity"
 
 class MainActivity : AppCompatActivity() {
+    private val defaultTemporaryStatusTimeout: Long = 3000
+    private var temporaryStatusJob: Job? = null
+    private var lastPermanentStatus: String? = null
     private lateinit var logView: TextView
     private val readerStateBroadcastReceiver = ReaderStateBroadcastReceiver()
 
     private lateinit var nfcAdapter: NfcAdapter
+
+    private lateinit var statusTextView: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,17 +47,15 @@ class MainActivity : AppCompatActivity() {
         )
 
         logView = findViewById(R.id.logView)!!
+        statusTextView = findViewById(R.id.statusTextView)!!
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
 
-        logMessage("Started.")
+        showPermanentStatus(getString(R.string.status_initializing))
     }
 
     override fun onPause() {
         super.onPause()
-
-        Log.d(TAG, "onPause")
-        logMessage("onPause")
 
         Log.d(TAG, "Disabling foreground NFC dispatch.")
         nfcAdapter.disableForegroundDispatch(this)
@@ -61,7 +65,6 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
 
         Log.d(TAG, "onResume")
-        logMessage("onResume")
 
         val intent = Intent(this, javaClass).apply {
             addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
@@ -95,8 +98,31 @@ class MainActivity : AppCompatActivity() {
         logView.text = "${logView.text.lines().takeLast(4).joinToString("\n")}\n$message"
     }
 
+    private fun showPermanentStatus(message: String) {
+        showStatus(message)
+        lastPermanentStatus = message
+        temporaryStatusJob?.cancel()
+    }
+
+    private fun showTemporaryStatus(message: String, timeoutMillis: Long = defaultTemporaryStatusTimeout) {
+        showStatus(message)
+        temporaryStatusJob = CoroutineScope(Dispatchers.Main).launch {
+            delay(timeoutMillis)
+            showLastPermanentStatus()
+        }
+    }
+
+    private fun showLastPermanentStatus() {
+        lastPermanentStatus?.let { showPermanentStatus(it) }
+    }
+
+    private fun showStatus(message: String) {
+        statusTextView.text = message
+        logMessage(message)
+    }
+
     fun onReaderInit() {
-        logMessage("Reader init.")
+        showPermanentStatus(getString(R.string.status_reader_init_done))
     }
 
     override fun onNewIntent(intent: Intent) {
@@ -110,7 +136,6 @@ class MainActivity : AppCompatActivity() {
     private fun onTechDiscovered(intent: Intent) {
         Log.i(TAG, "Tech discovered")
         Log.i(TAG, intent.toString())
-        logMessage("TECH")
 
         Log.d(TAG, "Starting the service with card info…")
         startService(ReaderServiceCommand.CardDetected(intent).makeIntent(this))
@@ -129,12 +154,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun onCardStatusChange(cardReadStatus: ReaderStateBroadcast.CardReadStatus) {
-        logMessage(
-            when (cardReadStatus) {
-                ReaderStateBroadcast.CardReadStatus.CardNotExpected -> "Card not expected"
-                is ReaderStateBroadcast.CardReadStatus.CardReadingError -> "Card reading error"
-                ReaderStateBroadcast.CardReadStatus.CardReadingSuccess -> "Card reading success"
-            }
+        showTemporaryStatus(
+            getString(
+                when (cardReadStatus) {
+                    ReaderStateBroadcast.CardReadStatus.CardNotExpected -> R.string.status_card_not_expected
+                    is ReaderStateBroadcast.CardReadStatus.CardReadingError -> R.string.status_card_reading_error
+                    ReaderStateBroadcast.CardReadStatus.CardReadingSuccess -> R.string.status_card_reading_success
+                }
+            )
         )
     }
 }

@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">KIS Čtečka</string>
     <string name="place_card">Place card</string>
+    <string name="status_initializing">Initializing…</string>
+    <string name="status_reader_init_done">Initialized</string>
+    <string name="status_card_not_expected">Card not expected</string>
+    <string name="status_card_reading_error">Card reading error</string>
+    <string name="status_card_reading_success">Success</string>
 </resources>
