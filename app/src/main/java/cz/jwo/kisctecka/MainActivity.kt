@@ -27,7 +27,7 @@ private const val TAG = "MainActivity"
 class MainActivity : AppCompatActivity() {
     private val defaultTemporaryStatusTimeout: Long = 3000
     private var temporaryStatusJob: Job? = null
-    private var lastPermanentStatus: String? = null
+    private var lastPermanentStatus: CharSequence? = null
     private lateinit var logView: TextView
     private val readerStateBroadcastReceiver = ReaderStateBroadcastReceiver()
 
@@ -53,7 +53,24 @@ class MainActivity : AppCompatActivity() {
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
 
-        showPermanentStatus(getString(R.string.status_initializing))
+        val savedLog = savedInstanceState?.getCharSequence(STATE_LOG)
+        val savedMessage = savedInstanceState?.getCharSequence(STATE_MESSAGE)
+        Log.d(TAG, savedInstanceState.toString())
+        if (savedMessage != null) {
+            showPermanentStatus(savedMessage)
+        } else {
+            showPermanentStatus(getString(R.string.status_initializing))
+        }
+        if (savedLog != null) {
+            logView.text = savedLog
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putCharSequence(STATE_MESSAGE, lastPermanentStatus ?: statusTextView.text)
+        outState.putCharSequence(STATE_LOG, logView.text)
     }
 
     override fun onPause() {
@@ -96,17 +113,17 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "Enabling foreground NFC dispatch.")
     }
 
-    private fun logMessage(message: String) {
+    private fun logMessage(message: CharSequence) {
         logView.text = "${logView.text.lines().takeLast(4).joinToString("\n")}\n$message"
     }
 
-    private fun showPermanentStatus(message: String) {
+    private fun showPermanentStatus(message: CharSequence) {
         showStatus(message)
         lastPermanentStatus = message
         temporaryStatusJob?.cancel()
     }
 
-    private fun showTemporaryStatus(message: String, timeoutMillis: Long = defaultTemporaryStatusTimeout) {
+    private fun showTemporaryStatus(message: CharSequence, timeoutMillis: Long = defaultTemporaryStatusTimeout) {
         showStatus(message)
         temporaryStatusJob = CoroutineScope(Dispatchers.Main).launch {
             delay(timeoutMillis)
@@ -118,7 +135,7 @@ class MainActivity : AppCompatActivity() {
         lastPermanentStatus?.let { showPermanentStatus(it) }
     }
 
-    private fun showStatus(message: String) {
+    private fun showStatus(message: CharSequence) {
         statusTextView.text = message
         logMessage(message)
     }
@@ -218,5 +235,10 @@ class MainActivity : AppCompatActivity() {
                 }
             )
         )
+    }
+
+    companion object {
+        const val STATE_MESSAGE = "cz.jwo.kisctecka.MainActivity.STATE_MESSAGE"
+        const val STATE_LOG = "cz.jwo.kisctecka.MainActivity.STATE_LOG"
     }
 }

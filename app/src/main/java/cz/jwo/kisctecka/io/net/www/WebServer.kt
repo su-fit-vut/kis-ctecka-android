@@ -41,6 +41,7 @@ class WebServer(private val commandReceiver: ClientCommandReceiver) {
             }
         }
     }
+
     private var wsSession: DefaultWebSocketServerSession? by Delegates.observable(null) { _, old, new ->
         if (old == null && new != null) {
             commandReceiver.connectionStateChanged(open=true)
@@ -48,6 +49,8 @@ class WebServer(private val commandReceiver: ClientCommandReceiver) {
             commandReceiver.connectionStateChanged(open=false)
         }
     }
+
+    val isConenctionOpen: Boolean = wsSession!=null
 
     fun start(wait: Boolean) {
         server.start(wait)

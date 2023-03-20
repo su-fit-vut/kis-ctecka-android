@@ -58,6 +58,8 @@ class ReaderService : Service(), ClientCommandReceiver {
                 // TODO Handle IO excpts.
                 webServer = WebServer(this)
                     .also { it.start(wait = false) }
+            } else {
+                connectionStateChanged(webServer?.isConenctionOpen ?: false)
             }
         }
         return START_STICKY
