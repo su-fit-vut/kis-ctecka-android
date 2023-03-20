@@ -59,7 +59,7 @@ class ReaderService : Service(), ClientCommandReceiver {
                 webServer = WebServer(this)
                     .also { it.start(wait = false) }
             } else {
-                connectionStateChanged(webServer?.isConenctionOpen ?: false)
+                connectionStateChanged(webServer?.isConnectionOpen ?: false)
             }
         }
         return START_STICKY

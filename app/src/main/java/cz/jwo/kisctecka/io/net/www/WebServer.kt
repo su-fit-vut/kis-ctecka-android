@@ -50,7 +50,7 @@ class WebServer(private val commandReceiver: ClientCommandReceiver) {
         }
     }
 
-    val isConenctionOpen: Boolean = wsSession!=null
+    val isConnectionOpen: Boolean = wsSession!=null
 
     fun start(wait: Boolean) {
         server.start(wait)
