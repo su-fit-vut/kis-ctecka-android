@@ -15,7 +15,8 @@
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">@color/su_blue</item>
+        <item name="android:navigationBarColor">@color/su_blue</item>
         <!-- Customize your theme here. -->
         <item name="fontFamily">@font/dosis_medium</item>
     </style>
