@@ -20,7 +20,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled false // breaks build
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -42,6 +42,7 @@ dependencies {
     implementation 'io.ktor:ktor-server-core:2.2.4'
     implementation 'io.ktor:ktor-server-netty:2.2.4'
     implementation 'io.ktor:ktor-server-websockets:2.2.4'
+    implementation("io.ktor:ktor-network-tls-certificates:2.2.4")
     implementation 'androidx.core:core-ktx:1.7.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
