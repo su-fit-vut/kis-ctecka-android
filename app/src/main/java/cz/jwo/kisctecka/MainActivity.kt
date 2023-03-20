@@ -14,6 +14,7 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import cz.jwo.kisctecka.service.ReaderMode
 import cz.jwo.kisctecka.service.ReaderService
 import cz.jwo.kisctecka.service.ReaderServiceCommand
 import cz.jwo.kisctecka.service.ReaderStateBroadcast
@@ -149,8 +150,23 @@ class MainActivity : AppCompatActivity() {
             when (broadcast) {
                 is ReaderStateBroadcast.ReaderInit -> onReaderInit()
                 is ReaderStateBroadcast.CardReadStatus -> onCardStatusChange(broadcast)
+                is ReaderStateBroadcast.ReaderModeChanged -> onReaderModeChanged(broadcast.readerMode)
             }
         }
+    }
+
+    private fun onReaderModeChanged(readerMode: ReaderMode) {
+        showPermanentStatus(
+            getString(
+                when (readerMode) {
+                    ReaderMode.SingleRead -> R.string.status_reading
+                    ReaderMode.ContinuousRead -> R.string.status_reading
+                    ReaderMode.SingleReadAuth -> R.string.status_reading
+                    ReaderMode.AuthUseKey -> R.string.status_reading
+                    ReaderMode.Idle ->R.string.status_idle
+                }
+            )
+        )
     }
 
     private fun onCardStatusChange(cardReadStatus: ReaderStateBroadcast.CardReadStatus) {

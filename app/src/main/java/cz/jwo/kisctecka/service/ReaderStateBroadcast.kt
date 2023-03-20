@@ -27,6 +27,9 @@ sealed class ReaderStateBroadcast : Parcelable {
         object CardNotExpected : CardReadStatus()
     }
 
+    @Parcelize
+    data class ReaderModeChanged(val readerMode: ReaderMode) : ReaderStateBroadcast()
+
     companion object {
         const val ACTION = "cz.jwo.kisctecka.ReaderStateBroadcast.EVENT"
         const val EXTRA_EVENT = "cz.jwo.kisctecka.ReaderStateBroadcast.EXTRA_EVENT"

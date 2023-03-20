@@ -6,4 +6,6 @@
     <string name="status_card_not_expected">Card not expected</string>
     <string name="status_card_reading_error">Card reading error</string>
     <string name="status_card_reading_success">Success</string>
+    <string name="status_reading">Waiting for a card</string>
+    <string name="status_idle">Connected</string>
 </resources>

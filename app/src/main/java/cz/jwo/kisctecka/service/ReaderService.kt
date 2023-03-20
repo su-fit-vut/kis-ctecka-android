@@ -17,6 +17,7 @@ const val TAG = "ReaderService"
 class ReaderService : Service(), ClientCommandReceiver {
     private var readerMode: ReaderMode by Delegates.observable(ReaderMode.Idle) { _, old, new ->
         Log.d(TAG, "Changing mode $old → $new")
+        sendBroadcast(ReaderStateBroadcast.ReaderModeChanged(readerMode))
     }
 
     private var webServer: WebServer? = null
