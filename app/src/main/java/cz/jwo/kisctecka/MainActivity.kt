@@ -142,8 +142,8 @@ class MainActivity : AppCompatActivity() {
         logView.text = "${logView.text.lines().takeLast(4).joinToString("\n")}\n$message"
     }
 
-    private fun showPermanentStatus(message: CharSequence) {
-        showStatus(message)
+    private fun showPermanentStatus(message: CharSequence, log: Boolean = true) {
+        showStatus(message, log = log)
         lastPermanentStatus = message
         temporaryStatusJob?.cancel()
     }
@@ -157,12 +157,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showLastPermanentStatus() {
-        lastPermanentStatus?.let { showPermanentStatus(it) }
+        lastPermanentStatus?.let { showPermanentStatus(it, log = false) }
     }
 
-    private fun showStatus(message: CharSequence) {
+    private fun showStatus(message: CharSequence, log: Boolean = true) {
         statusTextView.text = message
-        logMessage(message)
+        if (log) {
+            logMessage(message)
+        }
     }
 
     fun onReaderInit() {
