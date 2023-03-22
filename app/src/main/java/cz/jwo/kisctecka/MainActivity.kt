@@ -182,10 +182,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun onReaderInit() {
+    fun onReaderInitStart() {
+        showTemporaryStatus(getString(R.string.status_initializing))
+        restartButton.isVisible = false
+    }
+
+    private fun onReaderInitDone() {
         showReaderAddress()
         showTemporaryStatus(getString(R.string.status_reader_init_done))
-        restartButton.isVisible = false
     }
 
     fun onServerStartError(broadcast: ReaderStateBroadcast.ServerStartupError) {
@@ -215,7 +219,8 @@ class MainActivity : AppCompatActivity() {
             Log.d(TAG, "Received broadcast event: $broadcast")
 
             when (broadcast) {
-                is ReaderStateBroadcast.ReaderInit -> onReaderInit()
+                is ReaderStateBroadcast.ReaderInitStart -> onReaderInitStart()
+                is ReaderStateBroadcast.ReaderInitDone -> onReaderInitDone()
                 is ReaderStateBroadcast.CardReadStatus -> onCardStatusChange(broadcast)
                 is ReaderStateBroadcast.ReaderModeChanged -> onReaderModeChanged(broadcast.readerMode)
                 is ReaderStateBroadcast.ConnectionStateChange -> onConnectionStateChange(broadcast)

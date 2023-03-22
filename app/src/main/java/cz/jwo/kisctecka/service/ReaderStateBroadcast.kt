@@ -14,7 +14,10 @@ sealed class ReaderStateBroadcast : Parcelable {
     }
 
     @Parcelize
-    object ReaderInit : ReaderStateBroadcast()
+    object ReaderInitStart : ReaderStateBroadcast()
+
+    @Parcelize
+    object ReaderInitDone : ReaderStateBroadcast()
 
     @Parcelize
     data class ServerStartupError(val message: String) : ReaderStateBroadcast()

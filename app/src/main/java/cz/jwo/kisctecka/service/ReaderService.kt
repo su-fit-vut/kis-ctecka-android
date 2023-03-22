@@ -30,7 +30,7 @@ class ReaderService : Service(), ClientCommandReceiver {
         super.onCreate()
         Log.d(TAG, "onCreate")
 
-        sendBroadcast(ReaderStateBroadcast.ReaderInit)
+        sendBroadcast(ReaderStateBroadcast.ReaderInitStart)
     }
 
     override fun onBind(intent: Intent): IBinder? {
@@ -62,6 +62,8 @@ class ReaderService : Service(), ClientCommandReceiver {
                     try {
                         webServer = WebServer(this@ReaderService)
                             .also { it.start(wait = false) }
+
+                        reportInitDone()
                     } catch (exc: IOException) {
                         sendBroadcast(
                             ReaderStateBroadcast.ServerStartupError(
@@ -71,10 +73,15 @@ class ReaderService : Service(), ClientCommandReceiver {
                     }
                 }
             } else {
+                reportInitDone()
                 connectionStateChanged(webServer?.isConnectionOpen ?: false)
             }
         }
         return START_STICKY
+    }
+
+    private fun reportInitDone() {
+        sendBroadcast(ReaderStateBroadcast.ReaderInitDone)
     }
 
     override fun onDestroy() {
