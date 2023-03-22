@@ -68,6 +68,12 @@ class ReaderService : Service(), ClientCommandReceiver {
         return START_STICKY
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+
+        webServer?.stop()
+    }
+
     private fun onCommand(command: ReaderServiceCommand) {
         when (command) {
             is ReaderServiceCommand.CardDetected ->
