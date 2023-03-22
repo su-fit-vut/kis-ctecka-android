@@ -62,22 +62,26 @@ class WebServer(private val commandReceiver: ClientCommandReceiver) {
         wsSession = this
 
         for (frame in incoming) {
-            Log.d(TAG, "WS: Received frame ${frame.frameType}")
+            try {
+                Log.d(TAG, "WS: Received frame ${frame.frameType}")
 
-            Log.d(TAG, "WS: Incoming data")
-            Log.d(TAG, "WS: Data length: ${frame.buffer.limit()} (should be 35)")
-            val packet = RawDataPacket.deserialize(frame.data)
-            Log.d(TAG, "WS: Message type: ${packet.type}")
+                Log.d(TAG, "WS: Incoming data")
+                Log.d(TAG, "WS: Data length: ${frame.buffer.limit()} (should be 35)")
+                val packet = RawDataPacket.deserialize(frame.data)
+                Log.d(TAG, "WS: Message type: ${packet.type}")
 
-            // Process the packet.
-            when (packet.type) {
-                MessageCodeToReader.PING -> processPing(packet)
-                MessageCodeToReader.SINGLE_READ -> processSingleRead()
-                MessageCodeToReader.CONTINUOUS_READ -> processContinuousRead()
-                MessageCodeToReader.PRINT_TEXT -> processPrintText()
-                MessageCodeToReader.STOP -> processStop()
-                MessageCodeToReader.SINGLE_AUTH_ID -> processSingleAuthId()
-                MessageCodeToReader.SINGLE_AUTH_KEY -> processSingleAuthKey()
+                // Process the packet.
+                when (packet.type) {
+                    MessageCodeToReader.PING -> processPing(packet)
+                    MessageCodeToReader.SINGLE_READ -> processSingleRead()
+                    MessageCodeToReader.CONTINUOUS_READ -> processContinuousRead()
+                    MessageCodeToReader.PRINT_TEXT -> processPrintText()
+                    MessageCodeToReader.STOP -> processStop()
+                    MessageCodeToReader.SINGLE_AUTH_ID -> processSingleAuthId()
+                    MessageCodeToReader.SINGLE_AUTH_KEY -> processSingleAuthKey()
+                }
+            } catch (exc: Exception) {
+                Log.e(TAG, "Uncaught exception while processing WS frame.", exc)
             }
         }
 
