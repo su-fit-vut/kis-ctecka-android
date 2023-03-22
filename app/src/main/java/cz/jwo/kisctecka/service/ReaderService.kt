@@ -10,6 +10,7 @@ import android.util.Log
 import cz.jwo.kisctecka.io.net.www.WebServer
 import cz.jwo.kisctecka.io.nfc.TagReader
 import cz.jwo.kisctecka.io.nfc.TagReadingException
+import java.io.IOException
 import kotlin.properties.Delegates
 
 const val TAG = "ReaderService"
@@ -38,7 +39,7 @@ class ReaderService : Service(), ClientCommandReceiver {
     }
 
     override fun connectionStateChanged(open: Boolean) {
-        sendBroadcast(ReaderStateBroadcast.ConnectionStateChange(open=open))
+        sendBroadcast(ReaderStateBroadcast.ConnectionStateChange(open = open))
     }
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
@@ -52,12 +53,14 @@ class ReaderService : Service(), ClientCommandReceiver {
             }
         } else {
             Log.d(TAG, "Received start request: $intent")
-
             if (webServer == null) {
                 Log.d(TAG, "Starting the web server…")
-                // TODO Handle IO excpts.
-                webServer = WebServer(this)
-                    .also { it.start(wait = false) }
+                try {
+                    webServer = WebServer(this)
+                        .also { it.start(wait = false) }
+                } catch (exc: IOException) {
+                    sendBroadcast(ReaderStateBroadcast.ServerStartupError(exc.localizedMessage))
+                }
             } else {
                 connectionStateChanged(webServer?.isConnectionOpen ?: false)
             }

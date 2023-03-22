@@ -172,6 +172,10 @@ class MainActivity : AppCompatActivity() {
         showTemporaryStatus(getString(R.string.status_reader_init_done))
     }
 
+    fun onServerStartError(broadcast: ReaderStateBroadcast.ServerStartupError) {
+        showPermanentStatus(getString(R.string.status_start_failure, broadcast.message))
+    }
+
     override fun onNewIntent(intent: Intent) {
         if (intent.action == NfcAdapter.ACTION_TECH_DISCOVERED) {
             onTechDiscovered(intent)
@@ -198,6 +202,7 @@ class MainActivity : AppCompatActivity() {
                 is ReaderStateBroadcast.CardReadStatus -> onCardStatusChange(broadcast)
                 is ReaderStateBroadcast.ReaderModeChanged -> onReaderModeChanged(broadcast.readerMode)
                 is ReaderStateBroadcast.ConnectionStateChange -> onConnectionStateChange(broadcast)
+                is ReaderStateBroadcast.ServerStartupError -> onServerStartError(broadcast)
             }
         }
     }

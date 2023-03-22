@@ -16,6 +16,9 @@ sealed class ReaderStateBroadcast : Parcelable {
     @Parcelize
     object ReaderInit : ReaderStateBroadcast()
 
+    @Parcelize
+    data class ServerStartupError(val message: String) : ReaderStateBroadcast()
+
     sealed class CardReadStatus : ReaderStateBroadcast() {
         @Parcelize
         class CardReadingError(val cause: TagReadingException) : CardReadStatus()
