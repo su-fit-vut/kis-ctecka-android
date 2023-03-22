@@ -16,4 +16,5 @@
     <string name="settings_title">Settings</string>
     <string name="settings_section_behavior">Behavior</string>
     <string name="settings_flash_on_read">Flash camera when a card is read</string>
+    <string name="settings_flash_intensity">Intensity of the flash</string>
 </resources>
