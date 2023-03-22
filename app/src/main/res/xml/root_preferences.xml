@@ -4,7 +4,8 @@
 
         <SwitchPreferenceCompat
             app:key="flash_on_read"
-            app:title="@string/settings_flash_on_read" />
+            app:title="@string/settings_flash_on_read"
+            app:icon="@drawable/round_flash_on_24"/>
         <SeekBarPreference
             app:key="flash_brightness"
             app:title="@string/settings_flash_intensity"
