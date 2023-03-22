@@ -59,7 +59,7 @@ class ReaderService : Service(), ClientCommandReceiver {
                     webServer = WebServer(this)
                         .also { it.start(wait = false) }
                 } catch (exc: IOException) {
-                    sendBroadcast(ReaderStateBroadcast.ServerStartupError(exc.localizedMessage))
+                    sendBroadcast(ReaderStateBroadcast.ServerStartupError(exc.localizedMessage ?: exc.message ?: "no message"))
                 }
             } else {
                 connectionStateChanged(webServer?.isConnectionOpen ?: false)
