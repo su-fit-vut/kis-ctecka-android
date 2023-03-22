@@ -229,7 +229,7 @@ class MainActivity : AppCompatActivity() {
         networkInterfaces.forEach { networkInterface ->
             Log.d(TAG, "  • if: ${networkInterface.name}")
             networkInterface.interfaceAddresses.forEach { interfaceAddress ->
-                val addressString = interfaceAddress.address.hostAddress
+                val addressString = interfaceAddress.address.hostAddress ?: interfaceAddress.address.toString()
                 Log.d(TAG, "      • addr: $addressString")
                 if (addressString.startsWith("10.10.20.")) {
                     return "wis.vut.cy/ctecka/${addressString.split('.').last()} ($addressString)"
