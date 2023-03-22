@@ -251,11 +251,13 @@ class MainActivity : AppCompatActivity() {
             )
         )
 
-        //if (cardReadStatus == ReaderStateBroadcast.CardReadStatus.CardReadingSuccess) {
-        if (sharedPrefs.getBoolean(PREFERENCE_FLASH_ON_READ, false)) {
-            flashTorch()
+        if (cardReadStatus == ReaderStateBroadcast.CardReadStatus.CardReadingSuccess
+            || !sharedPrefs.getBoolean(PREFERENCE_FLASH_ONLY_ON_SUCCESS, true)
+        ) {
+            if (sharedPrefs.getBoolean(PREFERENCE_FLASH_ON_READ, false)) {
+                flashTorch()
+            }
         }
-        //}
     }
 
     private fun flashTorch() {
@@ -298,6 +300,7 @@ class MainActivity : AppCompatActivity() {
 
         const val PREFERENCE_FLASH_ON_READ = "flash_on_read"
         const val PREFERENCE_FLASH_BRIGHTNESS = "flash_brightness"
+        const val PREFERENCE_FLASH_ONLY_ON_SUCCESS = "flash_only_on_success"
 
         fun getTorchBrightnessRegulationAvailable(
             context: Context,
