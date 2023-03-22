@@ -135,7 +135,7 @@ class MainActivity : AppCompatActivity() {
             arrayOf(arrayOf(MifareUltralight::class.java.name), arrayOf(MifareClassic::class.java.name))
         )
 
-        restartService()
+        startService(Intent(this, ReaderService::class.java))
         Log.d(TAG, "Enabling foreground NFC dispatch.")
 
         window.setFlags(
