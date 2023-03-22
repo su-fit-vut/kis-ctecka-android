@@ -1,10 +1,10 @@
 package cz.jwo.kisctecka
 
 import android.app.PendingIntent
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
+import android.content.*
+import android.hardware.camera2.CameraAccessException
+import android.hardware.camera2.CameraCharacteristics
+import android.hardware.camera2.CameraManager
 import android.nfc.NfcAdapter
 import android.nfc.tech.MifareClassic
 import android.nfc.tech.MifareUltralight
@@ -12,8 +12,10 @@ import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.util.Log
+import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.PreferenceManager
 import cz.jwo.kisctecka.service.ReaderMode
 import cz.jwo.kisctecka.service.ReaderService
 import cz.jwo.kisctecka.service.ReaderServiceCommand
@@ -35,11 +37,19 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var statusTextView: TextView
 
+    private lateinit var sharedPrefs: SharedPreferences
+
+    private lateinit var cameraManager: CameraManager
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        supportActionBar?.hide()
+
         Log.d(TAG, "onCreate")
+
+        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this)
 
         registerReceiver(
             readerStateBroadcastReceiver,
@@ -51,7 +61,12 @@ class MainActivity : AppCompatActivity() {
         logView = findViewById(R.id.logView)!!
         statusTextView = findViewById(R.id.statusTextView)!!
 
+        findViewById<Button>(R.id.settingsButton).setOnClickListener {
+            startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
+        }
+
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
+        cameraManager = getSystemService(CAMERA_SERVICE) as CameraManager
 
         val savedLog = savedInstanceState?.getCharSequence(STATE_LOG)
         val savedMessage = savedInstanceState?.getCharSequence(STATE_MESSAGE)
@@ -235,10 +250,76 @@ class MainActivity : AppCompatActivity() {
                 }
             )
         )
+
+        //if (cardReadStatus == ReaderStateBroadcast.CardReadStatus.CardReadingSuccess) {
+        if (sharedPrefs.getBoolean(PREFERENCE_FLASH_ON_READ, false)) {
+            flashTorch()
+        }
+        //}
+    }
+
+    private fun flashTorch() {
+        val level = sharedPrefs.getInt(PREFERENCE_FLASH_BRIGHTNESS, 65535).toFloat() / 65535.0
+        cameraManager.cameraIdList.forEach { cameraId ->
+            val characteristics = cameraManager.getCameraCharacteristics(cameraId)
+            CoroutineScope(Dispatchers.Default).launch {
+                val regulationAvailable =
+                    getTorchBrightnessRegulationAvailable(this@MainActivity, cameraId = cameraId)
+                try {
+                    val maxLevel =
+                        if (regulationAvailable) {
+                            if (VERSION.SDK_INT >= VERSION_CODES.TIRAMISU) {
+                                characteristics.get(CameraCharacteristics.FLASH_INFO_STRENGTH_MAXIMUM_LEVEL)
+                            } else {
+                                throw AssertionError()
+                            }
+                        } else {
+                            null
+                        }
+                    if (regulationAvailable) {
+                        cameraManager.turnOnTorchWithStrengthLevel(cameraId, (level * (maxLevel ?: 1)).toInt())
+                    } else {
+                        cameraManager.setTorchMode(cameraId, true)
+                    }
+                    delay(100)
+                    cameraManager.setTorchMode(cameraId, false)
+                } catch (exc: CameraAccessException) {
+                    Log.e(TAG, "Failed to access camera (torch mode)", exc)
+                } catch (exc: IllegalArgumentException) {
+                    Log.w(TAG, "Failed to flash torch.", exc)
+                }
+            }
+        }
     }
 
     companion object {
         const val STATE_MESSAGE = "cz.jwo.kisctecka.MainActivity.STATE_MESSAGE"
         const val STATE_LOG = "cz.jwo.kisctecka.MainActivity.STATE_LOG"
+
+        const val PREFERENCE_FLASH_ON_READ = "flash_on_read"
+        const val PREFERENCE_FLASH_BRIGHTNESS = "flash_brightness"
+
+        fun getTorchBrightnessRegulationAvailable(
+            context: Context,
+            cameraManager: CameraManager? = null,
+            cameraId: String,
+        ) =
+            VERSION.SDK_INT >= VERSION_CODES.TIRAMISU
+                    && context.resources.getBoolean(R.bool.camera_brightness_regulation_enabled)
+                    && (cameraManager
+                ?: context.getSystemService(CAMERA_SERVICE) as CameraManager)?.let { cameraManager ->
+                cameraManager.getCameraCharacteristics(cameraId)?.let { cameraCharacteristics ->
+                    (cameraCharacteristics.get(CameraCharacteristics.FLASH_INFO_STRENGTH_MAXIMUM_LEVEL)
+                        ?: 1) > 1
+                } == true
+            } == true
+
+        fun getTorchBrightnessRegulationAvailable(context: Context): Boolean {
+            return (context.getSystemService(CAMERA_SERVICE) as CameraManager)?.let { cameraManager ->
+                cameraManager.cameraIdList
+                    ?.any { cameraId -> getTorchBrightnessRegulationAvailable(context, cameraManager, cameraId) }
+            }
+                ?: false
+        }
     }
 }

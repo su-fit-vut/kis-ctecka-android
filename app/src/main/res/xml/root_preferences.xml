@@ -1,0 +1,15 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory app:title="@string/settings_section_behavior">
+
+        <SwitchPreferenceCompat
+            app:key="flash_on_read"
+            app:title="@string/settings_flash_on_read" />
+        <SeekBarPreference
+            app:key="flash_brightness"
+            app:min="0" android:max="65535"
+            app:seekBarIncrement="1"/>
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
