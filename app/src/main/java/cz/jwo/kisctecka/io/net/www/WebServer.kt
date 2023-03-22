@@ -162,7 +162,9 @@ class WebServer(private val commandReceiver: ClientCommandReceiver) {
 
     fun stop() {
         Log.i(TAG, "Forcefully stopping the HTTP server.")
-        server.stop()
+        CoroutineScope(Dispatchers.IO).launch {
+            server.stop()
+        }
     }
 
 }

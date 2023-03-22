@@ -10,6 +10,9 @@ import android.util.Log
 import cz.jwo.kisctecka.io.net.www.WebServer
 import cz.jwo.kisctecka.io.nfc.TagReader
 import cz.jwo.kisctecka.io.nfc.TagReadingException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.IOException
 import kotlin.properties.Delegates
 
@@ -55,15 +58,17 @@ class ReaderService : Service(), ClientCommandReceiver {
             Log.d(TAG, "Received start request: $intent")
             if (webServer == null) {
                 Log.d(TAG, "Starting the web server…")
-                try {
-                    webServer = WebServer(this)
-                        .also { it.start(wait = false) }
-                } catch (exc: IOException) {
-                    sendBroadcast(
-                        ReaderStateBroadcast.ServerStartupError(
-                            exc.localizedMessage ?: exc.message ?: "no message"
+                CoroutineScope(Dispatchers.IO).launch {
+                    try {
+                        webServer = WebServer(this@ReaderService)
+                            .also { it.start(wait = false) }
+                    } catch (exc: IOException) {
+                        sendBroadcast(
+                            ReaderStateBroadcast.ServerStartupError(
+                                exc.localizedMessage ?: exc.message ?: "no message"
+                            )
                         )
-                    )
+                    }
                 }
             } else {
                 connectionStateChanged(webServer?.isConnectionOpen ?: false)
