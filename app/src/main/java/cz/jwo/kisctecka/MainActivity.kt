@@ -16,6 +16,7 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
 import androidx.preference.PreferenceManager
 import cz.jwo.kisctecka.service.ReaderMode
 import cz.jwo.kisctecka.service.ReaderService
@@ -37,6 +38,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var nfcAdapter: NfcAdapter
 
     private lateinit var statusTextView: TextView
+
+    private lateinit var restartButton: Button
 
     private lateinit var sharedPrefs: SharedPreferences
 
@@ -61,6 +64,13 @@ class MainActivity : AppCompatActivity() {
 
         logView = findViewById(R.id.logView)!!
         statusTextView = findViewById(R.id.statusTextView)!!
+        restartButton = findViewById(R.id.restartButton)!!
+
+        restartButton.isVisible = false
+        restartButton.setOnClickListener {
+            showPermanentStatus(getString(R.string.status_retrying))
+            restartService()
+        }
 
         findViewById<Button>(R.id.settingsButton).setOnClickListener {
             startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
@@ -125,7 +135,7 @@ class MainActivity : AppCompatActivity() {
             arrayOf(arrayOf(MifareUltralight::class.java.name), arrayOf(MifareClassic::class.java.name))
         )
 
-        startService(Intent(this, ReaderService::class.java))
+        restartService()
         Log.d(TAG, "Enabling foreground NFC dispatch.")
 
         window.setFlags(
@@ -136,6 +146,11 @@ class MainActivity : AppCompatActivity() {
                 )
             ) WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON else 0
         )
+    }
+
+    private fun restartService() {
+        stopService(Intent(this, ReaderService::class.java))
+        startService(Intent(this, ReaderService::class.java))
     }
 
     private fun logMessage(message: CharSequence) {
@@ -170,10 +185,12 @@ class MainActivity : AppCompatActivity() {
     fun onReaderInit() {
         showReaderAddress()
         showTemporaryStatus(getString(R.string.status_reader_init_done))
+        restartButton.isVisible = false
     }
 
     fun onServerStartError(broadcast: ReaderStateBroadcast.ServerStartupError) {
         showPermanentStatus(getString(R.string.status_start_failure, broadcast.message))
+        restartButton.isVisible = true
     }
 
     override fun onNewIntent(intent: Intent) {

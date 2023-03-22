@@ -27,4 +27,6 @@
     <string name="status_disconnected_studklub_address">%s\n(%s)</string>
     <string name="studklub_address">wis.vut.cy/ctecka/%s</string>
     <string name="status_start_failure">Startup failed:\n%s</string>
+    <string name="action_restart_service">Try again</string>
+    <string name="status_retrying">Retrying…</string>
 </resources>
