@@ -246,7 +246,7 @@ class MainActivity : AppCompatActivity() {
                     networkInterface.interfaceAddresses
                         .map { it.address }
                         .filter { !it.isAnyLocalAddress && !it.isLoopbackAddress }
-                        .filter { it.address.size == 4 }
+                        .filter { it.address.size == 4 } // IPv4 is currently used on all our networks.
                 )
             }
             .filter { (_, interestingAddresses) -> interestingAddresses.isNotEmpty() }
@@ -254,8 +254,9 @@ class MainActivity : AppCompatActivity() {
             ?.joinToString("\n") { (networkInterface, interestingAddresses) ->
                 networkInterface.displayName + ": " +
                         (interestingAddresses
-                            .map{ addr -> addr.hostAddress ?: addr.toString()}
-                            .joinToString(", "))
+                            .joinToString(", ") { addr ->
+                                addr.hostAddress ?: addr.toString()
+                            })
             }
             ?.let { return it }
 
