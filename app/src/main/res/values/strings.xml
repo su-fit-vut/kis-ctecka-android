@@ -25,7 +25,7 @@
     <string name="settings_keep_screen_on_summary_off">System configuration will be used</string>
     <string name="settings_keep_screen_on_summary_on">Screen stays on until exit</string>
     <string name="status_disconnected_studklub_address">%s\n(%s)</string>
-    <string name="studklub_address">wis.vut.cy/ctecka/%s</string>
+    <string name="studklub_address" translatable="false">wis.vut.cy/ctecka/%s</string>
     <string name="status_start_failure">Startup failed:\n%s</string>
     <string name="action_restart_service">Try again</string>
     <string name="status_retrying">Retrying…</string>

@@ -12,4 +12,20 @@
     <string name="status_disconnected">Odpojeno</string>
     <string name="status_reader_name">%s</string>
     <string name="status_disconnected_no_address">Odpojeno (neznámá adresa)</string>
+    <string name="button_settings">Nastavení</string>
+    <string name="settings_title">Nastavení</string>
+    <string name="settings_section_behavior">Chování čtečky</string>
+    <string name="settings_flash_on_read">Bliknout kamerou po přečtení karty</string>
+    <string name="settings_flash_only_on_success">Bliknout jen, když čtení uspělo</string>
+    <string name="settings_flash_intensity">Jas bliknutí</string>
+    <string name="settings_flash_only_on_success_summary_on">Kamera blikne jen při úspěšném přečtení karty</string>
+    <string name="settings_flash_only_on_success_summary_off">Kamera blikne po každém přiložení karty</string>
+    <string name="settings_flash_duration">Délka bliknutí</string>
+    <string name="settings_keep_screen_on">Nezhasínat obrazovku</string>
+    <string name="settings_keep_screen_on_summary_off">Bude použito systémové nastavení</string>
+    <string name="settings_keep_screen_on_summary_on">Obrazovka bude svítit do ukončení aplikace</string>
+    <string name="status_disconnected_studklub_address">%s\n(%s)</string>
+    <string name="status_start_failure">Spuštění selhalo:\n%s</string>
+    <string name="action_restart_service">Zkusit znovu</string>
+    <string name="status_retrying">Restartování…</string>
 </resources>
