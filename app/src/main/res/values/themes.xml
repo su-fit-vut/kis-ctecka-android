@@ -7,8 +7,10 @@
         <item name="android:textColor">@color/white</item>
 
         <!-- Primary brand color. -->
-        <item name="colorPrimary">@color/purple_500</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryVariant">@color/primary_light</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorPrimaryContainer">@color/primary_dark</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
@@ -27,7 +29,7 @@
         <item name="elevation">0dp</item>
         <item name="android:elevation">0dp</item>
         <item name="titleTextStyle">@style/ActionBarStyle.Title</item>
-        <item name="background">@color/purple_200</item>
+        <item name="background">@color/primary_dark</item>
     </style>
     <style name="ActionBarStyle.Title" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="textFillColor">@color/white</item>
