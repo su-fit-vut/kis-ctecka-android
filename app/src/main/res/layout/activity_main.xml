@@ -82,7 +82,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/action_restart_service"
-            style="@style/Widget.AppCompat.Button.Borderless"/>
+            android:drawableLeft="@drawable/round_refresh_24"
+            android:textSize="18sp"
+            android:paddingTop="12dp"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            tools:ignore="RtlHardcoded" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
