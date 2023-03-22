@@ -11,6 +11,12 @@
             app:title="@string/settings_flash_intensity"
             app:min="0" android:max="65535"
             app:seekBarIncrement="1"/>
+        <SeekBarPreference
+            app:key="flash_duration"
+            app:title="@string/settings_flash_duration"
+            app:min="0" android:max="1000"
+            app:defaultValue="@integer/default_flash_duration"
+            app:seekBarIncrement="1"/>
         <CheckBoxPreference
             app:key="flash_only_on_success"
             app:title="@string/settings_flash_only_on_success"

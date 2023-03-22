@@ -283,7 +283,7 @@ class MainActivity : AppCompatActivity() {
                     } else {
                         cameraManager.setTorchMode(cameraId, true)
                     }
-                    delay(100)
+                    delay(sharedPrefs.getInt(PREFERENCE_FLASH_DURATION, resources.getInteger(R.integer.default_flash_duration)).toLong())
                     cameraManager.setTorchMode(cameraId, false)
                 } catch (exc: CameraAccessException) {
                     Log.e(TAG, "Failed to access camera (torch mode)", exc)
@@ -300,6 +300,7 @@ class MainActivity : AppCompatActivity() {
 
         const val PREFERENCE_FLASH_ON_READ = "flash_on_read"
         const val PREFERENCE_FLASH_BRIGHTNESS = "flash_brightness"
+        const val PREFERENCE_FLASH_DURATION = "flash_duration"
         const val PREFERENCE_FLASH_ONLY_ON_SUCCESS = "flash_only_on_success"
 
         fun getTorchBrightnessRegulationAvailable(
