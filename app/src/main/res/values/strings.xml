@@ -24,4 +24,6 @@
     <string name="settings_keep_screen_on">Keep screen on</string>
     <string name="settings_keep_screen_on_summary_off">System configuration will be used</string>
     <string name="settings_keep_screen_on_summary_on">Screen stays on until exit</string>
+    <string name="status_disconnected_studklub_address">%s\n(%s)</string>
+    <string name="studklub_address">wis.vut.cy/ctecka/%s</string>
 </resources>

@@ -232,7 +232,11 @@ class MainActivity : AppCompatActivity() {
                 val addressString = interfaceAddress.address.hostAddress ?: interfaceAddress.address.toString()
                 Log.d(TAG, "      • addr: $addressString")
                 if (addressString.startsWith("10.10.20.")) {
-                    return "wis.vut.cy/ctecka/${addressString.split('.').last()} ($addressString)"
+                    return getString(
+                        R.string.status_disconnected_studklub_address,
+                        getString(R.string.studklub_address, addressString.split('.').last().toString()),
+                        addressString
+                    )
                 }
             }
         }
