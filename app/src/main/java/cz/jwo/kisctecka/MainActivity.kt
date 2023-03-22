@@ -12,6 +12,7 @@ import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.util.Log
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -126,6 +127,15 @@ class MainActivity : AppCompatActivity() {
 
         startService(Intent(this, ReaderService::class.java))
         Log.d(TAG, "Enabling foreground NFC dispatch.")
+
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
+            if (sharedPrefs.getBoolean(
+                    PREFERENCE_KEEP_SCREEN_ON,
+                    false
+                )
+            ) WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON else 0
+        )
     }
 
     private fun logMessage(message: CharSequence) {
@@ -283,7 +293,12 @@ class MainActivity : AppCompatActivity() {
                     } else {
                         cameraManager.setTorchMode(cameraId, true)
                     }
-                    delay(sharedPrefs.getInt(PREFERENCE_FLASH_DURATION, resources.getInteger(R.integer.default_flash_duration)).toLong())
+                    delay(
+                        sharedPrefs.getInt(
+                            PREFERENCE_FLASH_DURATION,
+                            resources.getInteger(R.integer.default_flash_duration)
+                        ).toLong()
+                    )
                     cameraManager.setTorchMode(cameraId, false)
                 } catch (exc: CameraAccessException) {
                     Log.e(TAG, "Failed to access camera (torch mode)", exc)
@@ -302,6 +317,7 @@ class MainActivity : AppCompatActivity() {
         const val PREFERENCE_FLASH_BRIGHTNESS = "flash_brightness"
         const val PREFERENCE_FLASH_DURATION = "flash_duration"
         const val PREFERENCE_FLASH_ONLY_ON_SUCCESS = "flash_only_on_success"
+        const val PREFERENCE_KEEP_SCREEN_ON = "keep_screen_on"
 
         fun getTorchBrightnessRegulationAvailable(
             context: Context,

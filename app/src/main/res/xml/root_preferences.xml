@@ -24,6 +24,12 @@
             app:summaryOff="@string/settings_flash_only_on_success_summary_off"
             app:defaultValue="true"/>
 
+        <SwitchPreferenceCompat
+            app:key="keep_screen_on"
+            app:title="@string/settings_keep_screen_on"
+            app:summaryOff="@string/settings_keep_screen_on_summary_off"
+            app:summaryOn="@string/settings_keep_screen_on_summary_on" />
+
     </PreferenceCategory>
 
 </PreferenceScreen>
