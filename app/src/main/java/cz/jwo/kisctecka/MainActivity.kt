@@ -223,7 +223,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun createCurrentAddress(): String? {
         Log.d(TAG, "Trying to get current address.")
-        NetworkInterface.getNetworkInterfaces().toList().forEach { networkInterface ->
+        val networkInterfaces = NetworkInterface.getNetworkInterfaces().toList()
+
+        // Try to get STUDKLUB address (shown together with reverse proxy URL address).
+        networkInterfaces.forEach { networkInterface ->
             Log.d(TAG, "  • if: ${networkInterface.name}")
             networkInterface.interfaceAddresses.forEach { interfaceAddress ->
                 val addressString = interfaceAddress.address.hostAddress
@@ -233,6 +236,29 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
+
+        // If we do not have STUDKLUB address, provide addresses of all network interfaces.
+        networkInterfaces
+            .filter { it.isUp && !it.isLoopback && !it.isVirtual && !it.isPointToPoint }
+            .map { networkInterface ->
+                Pair(
+                    networkInterface,
+                    networkInterface.interfaceAddresses
+                        .map { it.address }
+                        .filter { !it.isAnyLocalAddress && !it.isLoopbackAddress }
+                        .filter { it.address.size == 4 }
+                )
+            }
+            .filter { (_, interestingAddresses) -> interestingAddresses.isNotEmpty() }
+            .run { takeIf { isNotEmpty() } }
+            ?.joinToString("\n") { (networkInterface, interestingAddresses) ->
+                networkInterface.displayName + ": " +
+                        (interestingAddresses
+                            .map{ addr -> addr.hostAddress ?: addr.toString()}
+                            .joinToString(", "))
+            }
+            ?.let { return it }
+
         return null
     }
 
