@@ -238,7 +238,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         // If we do not have STUDKLUB address, provide addresses of all network interfaces.
-        networkInterfaces
+        return networkInterfaces
             .filter { it.isUp && !it.isLoopback && !it.isVirtual && !it.isPointToPoint }
             .map { networkInterface ->
                 Pair(
@@ -258,9 +258,6 @@ class MainActivity : AppCompatActivity() {
                                 addr.hostAddress ?: addr.toString()
                             })
             }
-            ?.let { return it }
-
-        return null
     }
 
     private fun onReaderModeChanged(readerMode: ReaderMode) {
