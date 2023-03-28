@@ -1,7 +1,9 @@
 <resources>
     <!-- Base application theme. -->
     <style name="Theme.KISČtečka" parent="Theme.Material3.Dark">
-        <item name="android:background">@color/su_blue</item>
+        <item name="appBackground">@color/su_blue</item>
+
+        <item name="android:background">?appBackground</item>
         <item name="actionBarStyle">@style/ActionBarStyle</item>
 
         <item name="android:textColor">@color/white</item>
@@ -17,13 +19,17 @@
         <item name="colorSecondaryVariant">@color/teal_700</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">@color/su_blue</item>
-        <item name="android:navigationBarColor">@color/su_blue</item>
+        <item name="android:statusBarColor">?appBackground</item>
+        <item name="android:navigationBarColor">?appBackground</item>
         <!-- Customize your theme here. -->
         <item name="fontFamily">@font/dosis_medium</item>
     </style>
 
-<!--    <style name="Theme.KISČtečka" parent="Theme.KISČtečkaDay" />-->
+    <style name="Theme.KISČtečka.OLed">
+        <item name="appBackground">@color/black</item>
+    </style>
+
+    <!--    <style name="Theme.KISČtečka" parent="Theme.KISČtečkaDay" />-->
 
     <style name="ActionBarStyle" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
         <item name="elevation">0dp</item>
@@ -31,6 +37,7 @@
         <item name="titleTextStyle">@style/ActionBarStyle.Title</item>
         <item name="background">@color/primary_dark</item>
     </style>
+
     <style name="ActionBarStyle.Title" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="textFillColor">@color/white</item>
     </style>

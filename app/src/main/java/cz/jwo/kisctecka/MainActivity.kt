@@ -11,8 +11,8 @@ import android.nfc.tech.MifareUltralight
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
+import android.os.PowerManager
 import android.util.Log
-import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -27,8 +27,11 @@ import java.net.NetworkInterface
 
 
 private const val TAG = "MainActivity"
+private const val PROXIMITY_WAKE_LOCK_TAG = "cz.jwo.kisctecka:MainActivity"
 
 class MainActivity : AppCompatActivity() {
+    private var proximityWakeLock: PowerManager.WakeLock? = null
+    private var blackThemeUsed: Boolean = false
     private val defaultTemporaryStatusTimeout: Long = 3000
     private var temporaryStatusJob: Job? = null
     private var lastPermanentStatus: CharSequence? = null
@@ -44,16 +47,22 @@ class MainActivity : AppCompatActivity() {
     private lateinit var sharedPrefs: SharedPreferences
 
     private lateinit var cameraManager: CameraManager
+    private lateinit var powerManager: PowerManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        supportActionBar?.hide()
 
         Log.d(TAG, "onCreate")
 
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this)
+
+        blackThemeUsed = useBlackTheme
+        if (blackThemeUsed) {
+            setTheme(R.style.Theme_KISČtečka_OLed)
+        }
+
+        supportActionBar?.hide()
+        setContentView(R.layout.activity_main)
 
         registerReceiver(
             readerStateBroadcastReceiver,
@@ -78,6 +87,7 @@ class MainActivity : AppCompatActivity() {
 
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
         cameraManager = getSystemService(CAMERA_SERVICE) as CameraManager
+        powerManager = getSystemService(POWER_SERVICE) as PowerManager
 
         val savedLog = savedInstanceState?.getCharSequence(STATE_LOG)
         val savedMessage = savedInstanceState?.getCharSequence(STATE_MESSAGE)
@@ -92,6 +102,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private val useBlackTheme get() = sharedPrefs.getBoolean(PREFERENCE_BLACK_THEME, false)
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
@@ -104,12 +116,18 @@ class MainActivity : AppCompatActivity() {
 
         Log.d(TAG, "Disabling foreground NFC dispatch.")
         nfcAdapter.disableForegroundDispatch(this)
+
+        proximityWakeLock?.release()
     }
 
     override fun onResume() {
         super.onResume()
 
         Log.d(TAG, "onResume")
+
+        if (blackThemeUsed != useBlackTheme) {
+            restartActivity()
+        }
 
         val intent = Intent(this, javaClass).apply {
             addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
@@ -138,14 +156,20 @@ class MainActivity : AppCompatActivity() {
         startService(Intent(this, ReaderService::class.java))
         Log.d(TAG, "Enabling foreground NFC dispatch.")
 
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
-            if (sharedPrefs.getBoolean(
-                    PREFERENCE_KEEP_SCREEN_ON,
-                    false
-                )
-            ) WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON else 0
-        )
+        proximityWakeLock = if (sharedPrefs.getBoolean(PREFERENCE_USE_PROXIMITY_SENSOR, false)) {
+            powerManager.newWakeLock(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK, PROXIMITY_WAKE_LOCK_TAG).also {
+                it.acquire()
+            }
+        } else {
+            null
+        }
+    }
+
+    private fun restartActivity() {
+        intent.let {
+            finish()
+            startActivity(it)
+        }
     }
 
     private fun restartService() {
@@ -375,6 +399,8 @@ class MainActivity : AppCompatActivity() {
         const val PREFERENCE_FLASH_DURATION = "flash_duration"
         const val PREFERENCE_FLASH_ONLY_ON_SUCCESS = "flash_only_on_success"
         const val PREFERENCE_KEEP_SCREEN_ON = "keep_screen_on"
+        const val PREFERENCE_BLACK_THEME = "black_theme"
+        const val PREFERENCE_USE_PROXIMITY_SENSOR = "use_proximity_sensor"
 
         fun getTorchBrightnessRegulationAvailable(
             context: Context,
