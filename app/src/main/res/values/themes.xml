@@ -29,8 +29,6 @@
         <item name="appBackground">@color/black</item>
     </style>
 
-    <!--    <style name="Theme.KISČtečka" parent="Theme.KISČtečkaDay" />-->
-
     <style name="ActionBarStyle" parent="Widget.AppCompat.Light.ActionBar.Solid.Inverse">
         <item name="elevation">0dp</item>
         <item name="android:elevation">0dp</item>
