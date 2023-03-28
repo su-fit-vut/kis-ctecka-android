@@ -58,7 +58,7 @@ class MainActivity : AppCompatActivity() {
 
         blackThemeUsed = useBlackTheme
         if (blackThemeUsed) {
-            setTheme(R.style.Theme_KISČtečka_OLed)
+            setTheme(R.style.Theme_KISCtecka_OLed)
         }
 
         supportActionBar?.hide()
