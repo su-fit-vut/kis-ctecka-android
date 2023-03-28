@@ -28,4 +28,11 @@
     <string name="status_start_failure">Spuštění selhalo:\n%s</string>
     <string name="action_restart_service">Zkusit znovu</string>
     <string name="status_retrying">Restartování…</string>
+    <string name="settings_section_screen">Obrazovka</string>
+    <string name="settings_black_theme">Černý motiv</string>
+    <string name="settings_black_theme_summary_off">Budou použity výchozí barvy</string>
+    <string name="settings_black_theme_summary_on">Aplikace bude mít černé pozadí</string>
+    <string name="settings_proximity_sensor">Vypnout obrazovku při zakrytí</string>
+    <string name="settings_proximity_sensor_summary_off">Obrazovka zůstane rozsvícená</string>
+    <string name="settings_proximity_sensor_summary_on">Obrazovka se bude zhasínat po přikrytí</string>
 </resources>
