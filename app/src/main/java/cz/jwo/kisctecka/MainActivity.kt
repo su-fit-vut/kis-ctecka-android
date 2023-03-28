@@ -24,6 +24,7 @@ import cz.jwo.kisctecka.service.ReaderServiceCommand
 import cz.jwo.kisctecka.service.ReaderStateBroadcast
 import kotlinx.coroutines.*
 import java.net.NetworkInterface
+import kotlin.math.log
 
 
 private const val TAG = "MainActivity"
@@ -178,7 +179,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun logMessage(message: CharSequence) {
-        logView.text = "${logView.text.lines().takeLast(4).joinToString("\n")}\n$message"
+        if (!logView.text.endsWith("\n$message")) {
+            logView.text = (logView.text.lines() + listOf(message)).takeLast(5).joinToString("\n")
+        }
     }
 
     private fun showPermanentStatus(message: CharSequence, log: Boolean = true) {
