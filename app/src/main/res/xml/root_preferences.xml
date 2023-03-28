@@ -37,6 +37,11 @@
             app:title="@string/settings_black_theme"
             app:summaryOff="@string/settings_black_theme_summary_off"
             app:summaryOn="@string/settings_black_theme_summary_on" />
+        <SwitchPreferenceCompat
+            app:key="use_proximity_sensor"
+            app:title="@string/settings_proximity_sensor"
+            app:summaryOff="@string/settings_proximity_sensor_summary_off"
+            app:summaryOn="@string/settings_proximity_sensor_summary_on" />
     </PreferenceCategory>
 
 </PreferenceScreen>
