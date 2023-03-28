@@ -29,4 +29,8 @@
     <string name="status_start_failure">Startup failed:\n%s</string>
     <string name="action_restart_service">Try again</string>
     <string name="status_retrying">Retrying…</string>
+    <string name="settings_section_screen">Screen</string>
+    <string name="settings_black_theme">Black theme</string>
+    <string name="settings_black_theme_summary_off">Default colors will be used</string>
+    <string name="settings_black_theme_summary_on">Black background will be used</string>
 </resources>

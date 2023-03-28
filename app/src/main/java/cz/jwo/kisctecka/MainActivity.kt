@@ -29,6 +29,7 @@ import java.net.NetworkInterface
 private const val TAG = "MainActivity"
 
 class MainActivity : AppCompatActivity() {
+    private var blackThemeUsed: Boolean = false
     private val defaultTemporaryStatusTimeout: Long = 3000
     private var temporaryStatusJob: Job? = null
     private var lastPermanentStatus: CharSequence? = null
@@ -47,13 +48,18 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        supportActionBar?.hide()
 
         Log.d(TAG, "onCreate")
 
         sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this)
+
+        blackThemeUsed = useBlackTheme
+        if (blackThemeUsed) {
+            setTheme(R.style.Theme_KISČtečka_OLed)
+        }
+
+        supportActionBar?.hide()
+        setContentView(R.layout.activity_main)
 
         registerReceiver(
             readerStateBroadcastReceiver,
@@ -92,6 +98,8 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private val useBlackTheme get() = sharedPrefs.getBoolean(PREFERENCE_BLACK_THEME, false)
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
@@ -110,6 +118,10 @@ class MainActivity : AppCompatActivity() {
         super.onResume()
 
         Log.d(TAG, "onResume")
+
+        if (blackThemeUsed != useBlackTheme) {
+            restartActivity()
+        }
 
         val intent = Intent(this, javaClass).apply {
             addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
@@ -137,15 +149,13 @@ class MainActivity : AppCompatActivity() {
 
         startService(Intent(this, ReaderService::class.java))
         Log.d(TAG, "Enabling foreground NFC dispatch.")
+    }
 
-        window.setFlags(
-            WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,
-            if (sharedPrefs.getBoolean(
-                    PREFERENCE_KEEP_SCREEN_ON,
-                    false
-                )
-            ) WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON else 0
-        )
+    private fun restartActivity() {
+        intent.let {
+            finish()
+            startActivity(it)
+        }
     }
 
     private fun restartService() {
@@ -375,6 +385,7 @@ class MainActivity : AppCompatActivity() {
         const val PREFERENCE_FLASH_DURATION = "flash_duration"
         const val PREFERENCE_FLASH_ONLY_ON_SUCCESS = "flash_only_on_success"
         const val PREFERENCE_KEEP_SCREEN_ON = "keep_screen_on"
+        const val PREFERENCE_BLACK_THEME = "black_theme"
 
         fun getTorchBrightnessRegulationAvailable(
             context: Context,
