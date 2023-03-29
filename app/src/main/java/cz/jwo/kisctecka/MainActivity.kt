@@ -395,23 +395,19 @@ class MainActivity : AppCompatActivity() {
 
         fun getTorchBrightnessRegulationAvailable(
             context: Context,
-            cameraManager: CameraManager? = null,
+            cameraManager: CameraManager = context.getSystemService(CAMERA_SERVICE) as CameraManager,
             cameraId: String,
         ) =
-            VERSION.SDK_INT >= VERSION_CODES.TIRAMISU
-                    && context.resources.getBoolean(R.bool.camera_brightness_regulation_enabled)
-                    && (cameraManager
-                ?: context.getSystemService(CAMERA_SERVICE) as CameraManager)?.let { cameraManager ->
-                cameraManager.getCameraCharacteristics(cameraId)?.let { cameraCharacteristics ->
-                    (cameraCharacteristics.get(CameraCharacteristics.FLASH_INFO_STRENGTH_MAXIMUM_LEVEL)
-                        ?: 1) > 1
-                } == true
-            } == true
+            (VERSION.SDK_INT >= VERSION_CODES.TIRAMISU && context.resources.getBoolean(R.bool.camera_brightness_regulation_enabled))
+                    && cameraManager.getCameraCharacteristics(cameraId)
+                .let { cameraCharacteristics ->
+                    (cameraCharacteristics.get(CameraCharacteristics.FLASH_INFO_STRENGTH_MAXIMUM_LEVEL) ?: 1) > 1
+                }
 
         fun getTorchBrightnessRegulationAvailable(context: Context): Boolean {
-            return (context.getSystemService(CAMERA_SERVICE) as CameraManager)?.let { cameraManager ->
+            return (context.getSystemService(CAMERA_SERVICE) as CameraManager).let { cameraManager ->
                 cameraManager.cameraIdList
-                    ?.any { cameraId -> getTorchBrightnessRegulationAvailable(context, cameraManager, cameraId) }
+                    .any { cameraId -> getTorchBrightnessRegulationAvailable(context, cameraManager, cameraId) }
             }
                 ?: false
         }
