@@ -409,7 +409,6 @@ class MainActivity : AppCompatActivity() {
                 cameraManager.cameraIdList
                     .any { cameraId -> getTorchBrightnessRegulationAvailable(context, cameraManager, cameraId) }
             }
-                ?: false
         }
     }
 }

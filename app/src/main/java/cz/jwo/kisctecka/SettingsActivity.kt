@@ -28,9 +28,9 @@ class SettingsActivity : AppCompatActivity() {
         override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
             setPreferencesFromResource(R.xml.root_preferences, rootKey)
 
-            flashBrightnessPref = findPreference<SeekBarPreference>("flash_brightness")!!
-            flashEnabledPref = findPreference<TwoStatePreference>("flash_on_read")!!
-            flashOnlyOnSuccess = findPreference<TwoStatePreference>("flash_only_on_success")!!
+            flashBrightnessPref = findPreference("flash_brightness")!!
+            flashEnabledPref = findPreference("flash_on_read")!!
+            flashOnlyOnSuccess = findPreference("flash_only_on_success")!!
 
             flashBrightnessPref.isVisible = MainActivity.getTorchBrightnessRegulationAvailable(requireContext())
 
