@@ -35,4 +35,5 @@
     <string name="settings_proximity_sensor">Vypnout obrazovku při zakrytí</string>
     <string name="settings_proximity_sensor_summary_off">Obrazovka zůstane rozsvícená</string>
     <string name="settings_proximity_sensor_summary_on">Obrazovka se bude zhasínat po přikrytí</string>
+    <string name="brief_version_information">Verze %s Aktualizováno: %s</string>
 </resources>
