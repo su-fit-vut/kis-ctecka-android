@@ -137,16 +137,7 @@ class MainActivity : AppCompatActivity() {
             this, 0, intent,
             if (VERSION.SDK_INT >= VERSION_CODES.S) PendingIntent.FLAG_MUTABLE else 0
         )
-        val ndef = IntentFilter(NfcAdapter.ACTION_TECH_DISCOVERED).apply {
-            try {
-                addDataType("*/*")    /* Handles all MIME based dispatches.
-                                 You should specify only the ones that you need. */
-            } catch (e: IntentFilter.MalformedMimeTypeException) {
-                throw RuntimeException("fail", e)
-            }
-        }
 
-        val intentFiltersArray = arrayOf(ndef)
         nfcAdapter.enableForegroundDispatch(
             this,
             pendingIntent,
