@@ -1,7 +1,10 @@
 package cz.jwo.kisctecka
 
 import android.app.PendingIntent
-import android.content.*
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.hardware.camera2.CameraAccessException
 import android.hardware.camera2.CameraCharacteristics
 import android.hardware.camera2.CameraManager
@@ -24,7 +27,6 @@ import cz.jwo.kisctecka.service.ReaderServiceCommand
 import cz.jwo.kisctecka.service.ReaderStateBroadcast
 import kotlinx.coroutines.*
 import java.net.NetworkInterface
-import kotlin.math.log
 
 
 private const val TAG = "MainActivity"
