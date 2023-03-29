@@ -1,5 +1,6 @@
 package cz.jwo.kisctecka
 
+import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -148,6 +149,7 @@ class MainActivity : AppCompatActivity() {
         startService(Intent(this, ReaderService::class.java))
         Log.d(TAG, "Enabling foreground NFC dispatch.")
 
+        @SuppressLint("WakelockTimeout")
         proximityWakeLock = if (appPreferences.useProximitySensor) {
             powerManager.newWakeLock(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK, PROXIMITY_WAKE_LOCK_TAG).also {
                 it.acquire()
@@ -176,6 +178,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun logMessage(message: CharSequence) {
         if (!logView.text.endsWith("\n$message")) {
+            @SuppressLint("SetTextI18n")
             logView.text = (logView.text.lines() + listOf(message)).takeLast(5).joinToString("\n")
         }
     }
