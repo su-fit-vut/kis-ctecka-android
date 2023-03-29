@@ -12,6 +12,7 @@ import android.hardware.camera2.CameraManager
 import android.nfc.NfcAdapter
 import android.nfc.tech.MifareClassic
 import android.nfc.tech.MifareUltralight
+import android.os.Build
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
@@ -28,6 +29,8 @@ import cz.jwo.kisctecka.service.ReaderServiceCommand
 import cz.jwo.kisctecka.service.ReaderStateBroadcast
 import kotlinx.coroutines.*
 import java.net.NetworkInterface
+import java.text.DateFormat
+import java.util.*
 
 
 private const val TAG = "MainActivity"
@@ -103,6 +106,14 @@ class MainActivity : AppCompatActivity() {
         }
         if (savedLog != null) {
             logView.text = savedLog
+        }
+
+        packageManager.getPackageInfo(packageName, 0).let { myPackage ->
+            findViewById<TextView>(R.id.appVersion).text = getString(
+                R.string.brief_version_information,
+                myPackage.versionName,
+                DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM).format(Date(myPackage.lastUpdateTime)),
+            )
         }
     }
 

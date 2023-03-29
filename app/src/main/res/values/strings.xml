@@ -36,4 +36,6 @@
     <string name="settings_proximity_sensor">Turn screen off when covered</string>
     <string name="settings_proximity_sensor_summary_off">The screen will stay on when covered</string>
     <string name="settings_proximity_sensor_summary_on">The screen will turn off when covered</string>
+
+    <string name="brief_version_information">Version %s\nUpdated: %s</string>
 </resources>

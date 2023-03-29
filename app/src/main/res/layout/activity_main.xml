@@ -10,10 +10,10 @@
         android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="24dp"
-        tools:text="Log message 1"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toStartOf="@+id/appVersion"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:text="Log message 1" />
 
     <TextView
         android:id="@+id/textView"
@@ -89,5 +89,15 @@
             style="@style/Widget.AppCompat.Button.Borderless"
             tools:ignore="RtlHardcoded" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/appVersion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        tools:text="version 42.0"
+        android:textAlignment="textEnd"
+        app:layout_constraintBottom_toBottomOf="@+id/logView"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
