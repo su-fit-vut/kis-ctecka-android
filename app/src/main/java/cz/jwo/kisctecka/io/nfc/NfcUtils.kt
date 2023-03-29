@@ -4,7 +4,6 @@ import android.nfc.Tag
 import android.nfc.tech.MifareClassic
 import android.nfc.tech.NfcA
 import android.os.Bundle
-import android.os.IBinder
 import android.os.Parcel
 
 /**
@@ -13,76 +12,80 @@ import android.os.Parcel
  * From this project: https://github.com/nadam/nfc-reader
  *
  * License: Apache 2.0 (see https://f-droid.org/packages/se.anyro.nfc_reader/)
+ *
+ * Converted to Kotlin and further modified by Jiří Wolker.
  */
-fun cleanupTag(oTag: Tag): Tag {
-    val sTechList = oTag.techList
-    val oParcel = Parcel.obtain()
-    oTag.writeToParcel(oParcel, 0)
-    oParcel.setDataPosition(0)
-    val len = oParcel.readInt()
+fun cleanupTag(tag: Tag): Tag {
+    val techList = tag.techList
+    val tagParcel = Parcel.obtain().also {
+        tag.writeToParcel(it, 0)
+        it.setDataPosition(0)
+    }
+    val len = tagParcel.readInt()
     var id: ByteArray? = null
     if (len >= 0) {
         id = ByteArray(len)
-        oParcel.readByteArray(id)
+        tagParcel.readByteArray(id)
     }
-    val oTechList = IntArray(oParcel.readInt())
-    oParcel.readIntArray(oTechList)
-    val oTechExtras = oParcel.createTypedArray(Bundle.CREATOR)
-    val serviceHandle = oParcel.readInt()
-    val isMock = oParcel.readInt()
-    val tagService: IBinder?
-    tagService = if (isMock == 0) {
-        oParcel.readStrongBinder()
+    val newTechList = IntArray(tagParcel.readInt())
+    tagParcel.readIntArray(newTechList)
+    val techExtras = tagParcel.createTypedArray(Bundle.CREATOR)
+    val serviceHandle = tagParcel.readInt()
+    val isMock = tagParcel.readInt()
+    val tagService = if (isMock == 0) {
+        tagParcel.readStrongBinder()
     } else {
         null
     }
-    oParcel.recycle()
-    var nfca_idx = -1
-    var mc_idx = -1
-    var oSak: Short = 0
-    var nSak: Short = 0
-    for (idx in sTechList.indices) {
-        if (sTechList[idx] == NfcA::class.java.name) {
-            if (nfca_idx == -1) {
-                nfca_idx = idx
-                if (oTechExtras!![idx] != null && oTechExtras[idx]!!.containsKey("sak")) {
-                    oSak = oTechExtras[idx]!!.getShort("sak")
-                    nSak = oSak
+    tagParcel.recycle()
+    var nfcaIdx = -1
+    var mcIdx = -1
+    var sak: Short = 0
+    var newSak: Short = 0
+    for (idx in techList.indices) {
+        if (techList[idx] == NfcA::class.java.name) {
+            if (nfcaIdx == -1) {
+                nfcaIdx = idx
+                if (techExtras!![idx] != null && techExtras[idx]!!.containsKey("sak")) {
+                    sak = techExtras[idx]!!.getShort("sak")
+                    newSak = sak
                 }
             } else {
-                if (oTechExtras!![idx] != null && oTechExtras[idx]!!.containsKey("sak")) {
-                    nSak = (nSak.toInt() or oTechExtras[idx]!!.getShort("sak").toInt()).toShort()
+                if (techExtras!![idx] != null && techExtras[idx]!!.containsKey("sak")) {
+                    newSak = (newSak.toInt() or techExtras[idx]!!.getShort("sak").toInt()).toShort()
                 }
             }
-        } else if (sTechList[idx] == MifareClassic::class.java.name) {
-            mc_idx = idx
+        } else if (techList[idx] == MifareClassic::class.java.name) {
+            mcIdx = idx
         }
     }
     var modified = false
-    if (oSak != nSak) {
-        oTechExtras!![nfca_idx]!!.putShort("sak", nSak)
+    if (sak != newSak) {
+        techExtras!![nfcaIdx]!!.putShort("sak", newSak)
         modified = true
     }
-    if (nfca_idx != -1 && mc_idx != -1 && oTechExtras!![mc_idx] == null) {
-        oTechExtras[mc_idx] = oTechExtras[nfca_idx]
+    if (nfcaIdx != -1 && mcIdx != -1 && techExtras!![mcIdx] == null) {
+        techExtras[mcIdx] = techExtras[nfcaIdx]
         modified = true
     }
     if (!modified) {
-        return oTag
+        return tag
     }
-    val nParcel = Parcel.obtain()
-    nParcel.writeInt(id!!.size)
-    nParcel.writeByteArray(id)
-    nParcel.writeInt(oTechList.size)
-    nParcel.writeIntArray(oTechList)
-    nParcel.writeTypedArray(oTechExtras, 0)
-    nParcel.writeInt(serviceHandle)
-    nParcel.writeInt(isMock)
-    if (isMock == 0) {
-        nParcel.writeStrongBinder(tagService)
+    Parcel.obtain().let { outputParcel ->
+        outputParcel.apply {
+            writeInt(id!!.size)
+            writeByteArray(id)
+            writeInt(newTechList.size)
+            writeIntArray(newTechList)
+            writeTypedArray(techExtras, 0)
+            writeInt(serviceHandle)
+            writeInt(isMock)
+            if (isMock == 0) {
+                writeStrongBinder(tagService)
+            }
+            setDataPosition(0)
+        }
+        return Tag.CREATOR.createFromParcel(outputParcel)
+            .also { outputParcel.recycle() }
     }
-    nParcel.setDataPosition(0)
-    val nTag = Tag.CREATOR.createFromParcel(nParcel)
-    nParcel.recycle()
-    return nTag
 }
