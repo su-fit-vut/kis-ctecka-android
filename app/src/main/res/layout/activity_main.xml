@@ -40,7 +40,8 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView"
         app:layout_constraintVertical_bias="0.31"
-        app:srcCompat="@drawable/kachna_bez_peny" />
+        app:srcCompat="@drawable/kachna_bez_peny"
+        android:contentDescription="@null"/>
 
     <TextView
         android:id="@+id/statusTextView"
