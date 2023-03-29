@@ -13,11 +13,11 @@ import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.os.PowerManager
 import android.util.Log
+import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.preference.PreferenceManager
 import cz.jwo.kisctecka.service.ReaderMode
 import cz.jwo.kisctecka.service.ReaderService
 import cz.jwo.kisctecka.service.ReaderServiceCommand
@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var restartButton: Button
 
-    private lateinit var sharedPrefs: SharedPreferences
+    private lateinit var appPreferences: AppPreferences
 
     private lateinit var cameraManager: CameraManager
     private lateinit var powerManager: PowerManager
@@ -55,9 +55,9 @@ class MainActivity : AppCompatActivity() {
 
         Log.d(TAG, "onCreate")
 
-        sharedPrefs = PreferenceManager.getDefaultSharedPreferences(this)
+        appPreferences = AppPreferences(this)
 
-        blackThemeUsed = useBlackTheme
+        blackThemeUsed = appPreferences.useBlackTheme
         if (blackThemeUsed) {
             setTheme(R.style.Theme_KISCtecka_OLed)
         }
@@ -103,8 +103,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private val useBlackTheme get() = sharedPrefs.getBoolean(PREFERENCE_BLACK_THEME, false)
-
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
 
@@ -126,7 +124,7 @@ class MainActivity : AppCompatActivity() {
 
         Log.d(TAG, "onResume")
 
-        if (blackThemeUsed != useBlackTheme) {
+        if (blackThemeUsed != appPreferences.useBlackTheme) {
             restartActivity()
         }
 
@@ -157,13 +155,18 @@ class MainActivity : AppCompatActivity() {
         startService(Intent(this, ReaderService::class.java))
         Log.d(TAG, "Enabling foreground NFC dispatch.")
 
-        proximityWakeLock = if (sharedPrefs.getBoolean(PREFERENCE_USE_PROXIMITY_SENSOR, false)) {
+        proximityWakeLock = if (appPreferences.useProximitySensor) {
             powerManager.newWakeLock(PowerManager.PROXIMITY_SCREEN_OFF_WAKE_LOCK, PROXIMITY_WAKE_LOCK_TAG).also {
                 it.acquire()
             }
         } else {
             null
         }
+
+        window.setFlags(
+            if (appPreferences.keepScreenOn) WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON else 0,
+            WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON
+        )
     }
 
     private fun restartActivity() {
@@ -346,16 +349,16 @@ class MainActivity : AppCompatActivity() {
         )
 
         if (cardReadStatus == ReaderStateBroadcast.CardReadStatus.CardReadingSuccess
-            || !sharedPrefs.getBoolean(PREFERENCE_FLASH_ONLY_ON_SUCCESS, true)
+            || !appPreferences.flashOnlyOnSuccess
         ) {
-            if (sharedPrefs.getBoolean(PREFERENCE_FLASH_ON_READ, false)) {
+            if (appPreferences.flashOnRead) {
                 flashTorch()
             }
         }
     }
 
     private fun flashTorch() {
-        val level = sharedPrefs.getInt(PREFERENCE_FLASH_BRIGHTNESS, 65535).toFloat() / 65535.0
+        val level = appPreferences.flashBrightness.toFloat() / 65535.0
         cameraManager.cameraIdList.forEach { cameraId ->
             val characteristics = cameraManager.getCameraCharacteristics(cameraId)
             CoroutineScope(Dispatchers.Default).launch {
@@ -378,10 +381,7 @@ class MainActivity : AppCompatActivity() {
                         cameraManager.setTorchMode(cameraId, true)
                     }
                     delay(
-                        sharedPrefs.getInt(
-                            PREFERENCE_FLASH_DURATION,
-                            resources.getInteger(R.integer.default_flash_duration)
-                        ).toLong()
+                        appPreferences.flashDuration.toLong()
                     )
                     cameraManager.setTorchMode(cameraId, false)
                 } catch (exc: CameraAccessException) {
@@ -396,14 +396,6 @@ class MainActivity : AppCompatActivity() {
     companion object {
         const val STATE_MESSAGE = "cz.jwo.kisctecka.MainActivity.STATE_MESSAGE"
         const val STATE_LOG = "cz.jwo.kisctecka.MainActivity.STATE_LOG"
-
-        const val PREFERENCE_FLASH_ON_READ = "flash_on_read"
-        const val PREFERENCE_FLASH_BRIGHTNESS = "flash_brightness"
-        const val PREFERENCE_FLASH_DURATION = "flash_duration"
-        const val PREFERENCE_FLASH_ONLY_ON_SUCCESS = "flash_only_on_success"
-        const val PREFERENCE_KEEP_SCREEN_ON = "keep_screen_on"
-        const val PREFERENCE_BLACK_THEME = "black_theme"
-        const val PREFERENCE_USE_PROXIMITY_SENSOR = "use_proximity_sensor"
 
         fun getTorchBrightnessRegulationAvailable(
             context: Context,
