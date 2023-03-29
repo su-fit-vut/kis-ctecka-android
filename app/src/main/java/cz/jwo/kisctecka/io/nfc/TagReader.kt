@@ -10,7 +10,7 @@ import cz.jwo.kisctecka.service.TAG
 import java.io.IOException
 
 class TagReader(tag: Tag) {
-    private val tag = cleanupTag(tag)
+    private val tag = fixTagInformation(tag)
 
     private val nfcA = NfcA.get(this.tag)
     private val mifareClassic = MifareClassic.get(this.tag)

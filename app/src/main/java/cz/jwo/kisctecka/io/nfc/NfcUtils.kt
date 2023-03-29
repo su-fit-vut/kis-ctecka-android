@@ -15,7 +15,7 @@ import android.os.Parcel
  *
  * Converted to Kotlin and further modified by Jiří Wolker.
  */
-fun cleanupTag(tag: Tag): Tag {
+fun fixTagInformation(tag: Tag): Tag {
     val techList = tag.techList
     val tagParcel = Parcel.obtain().also {
         tag.writeToParcel(it, 0)
