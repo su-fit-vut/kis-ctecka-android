@@ -11,7 +11,7 @@ android {
     defaultConfig {
         applicationId "cz.jwo.kisctecka"
         minSdk 21
-        targetSdk 32
+        targetSdk 33
         versionCode 300
         versionName "0.3"
 
