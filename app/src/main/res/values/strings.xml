@@ -38,4 +38,7 @@
     <string name="settings_proximity_sensor_summary_on">The screen will turn off when covered</string>
 
     <string name="brief_version_information">Version %s\nUpdated: %s</string>
+    <string name="nfc_unavailable_title">NFC is not available</string>
+    <string name="nfc_unavailable_text">This application can be used only on devices supporting NFC communication.</string>
+    <string name="error_icon_contentDescription">Error</string>
 </resources>

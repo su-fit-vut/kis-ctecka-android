@@ -21,6 +21,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.KISCtecka"
         tools:targetApi="31">
+        <activity
+            android:name=".NfcNotAvailableActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
 
         <service
             android:name=".service.ReaderService"
@@ -46,7 +53,6 @@
                 android:name="android.nfc.action.TECH_DISCOVERED"
                 android:resource="@xml/nfc_tech_filter" />
         </activity>
-
         <activity
             android:name=".SettingsActivity"
             android:exported="false"
@@ -57,4 +63,5 @@
                 android:value="" />
         </activity>
     </application>
+
 </manifest>

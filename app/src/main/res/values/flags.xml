@@ -2,4 +2,5 @@
 <resources>
     <bool name="camera_brightness_regulation_enabled">true</bool>
     <integer name="default_flash_duration">100</integer>
+    <bool name="pretend_having_no_nfc">false</bool>
 </resources>
