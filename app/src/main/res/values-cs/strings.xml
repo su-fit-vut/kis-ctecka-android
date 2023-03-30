@@ -36,4 +36,7 @@
     <string name="settings_proximity_sensor_summary_off">Obrazovka zůstane rozsvícená</string>
     <string name="settings_proximity_sensor_summary_on">Obrazovka se bude zhasínat po přikrytí</string>
     <string name="brief_version_information">Verze %s\nAktualizováno: %s</string>
+    <string name="nfc_unavailable_title">NFC není dostupné</string>
+    <string name="nfc_unavailable_text">Tuto aplikaci je možné používat pouze na zařízeních s NFC.</string>
+    <string name="error_icon_contentDescription">Chyba</string>
 </resources>
