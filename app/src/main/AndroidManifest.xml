@@ -22,6 +22,16 @@
         android:theme="@style/Theme.KISCtecka"
         tools:targetApi="31">
         <activity
+            android:name=".VersionActivity"
+            android:exported="true"
+            android:label="@string/title_activity_version"
+            android:theme="@style/Theme.KISCtecka.NoActionBar"
+            android:parentActivityName=".MainActivity">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
             android:name=".NfcNotAvailableActivity"
             android:exported="false">
             <meta-data

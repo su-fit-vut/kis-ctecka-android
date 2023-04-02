@@ -1,5 +1,6 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
     <PreferenceCategory app:title="@string/settings_section_behavior">
 
         <SwitchPreferenceCompat
@@ -44,6 +45,15 @@
             app:title="@string/settings_proximity_sensor"
             app:summaryOff="@string/settings_proximity_sensor_summary_off"
             app:summaryOn="@string/settings_proximity_sensor_summary_on" />
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:title="@string/settings_section_info">
+
+        <Preference
+            app:key="version"
+            app:title="@string/settings_app_version"
+            tools:summary="Version 4.2" />
     </PreferenceCategory>
 
 </PreferenceScreen>

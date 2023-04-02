@@ -1,8 +1,10 @@
 package cz.jwo.kisctecka
 
+import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SeekBarPreference
 import androidx.preference.TwoStatePreference
@@ -36,7 +38,13 @@ class SettingsActivity : AppCompatActivity() {
 
             refreshPreferenceDependencies()
 
-            preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener (this)
+            preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
+
+            findPreference<Preference>("version")!!
+                .setOnPreferenceClickListener {
+                    startActivity(Intent(requireContext(), VersionActivity::class.java))
+                    true
+                }
         }
 
         private fun refreshPreferenceDependencies() {
