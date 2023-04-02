@@ -45,6 +45,16 @@ class SettingsActivity : AppCompatActivity() {
                     startActivity(Intent(requireContext(), VersionActivity::class.java))
                     true
                 }
+            findPreference<Preference>("github")!!
+                .setOnPreferenceClickListener {
+                    launchGitHub(requireContext())
+                    true
+                }
+            findPreference<Preference>("discord")!!
+                .setOnPreferenceClickListener {
+                    launchDiscord(requireContext())
+                    true
+                }
         }
 
         private fun refreshPreferenceDependencies() {

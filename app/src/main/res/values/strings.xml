@@ -174,4 +174,6 @@ SOFTWARE.</string>
     Full Apache 2.0 license text: https://www.apache.org/licenses/LICENSE-2.0</string>
     <string name="version_button_github">GitHub</string>
     <string name="version_button_discord">Discord</string>
+    <string name="settings_app_github">GitHub page of the application</string>
+    <string name="settings_app_discord">Discord channel <i>#kis-ctecka</i></string>
 </resources>

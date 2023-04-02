@@ -54,6 +54,14 @@
             app:key="version"
             app:title="@string/settings_app_version"
             tools:summary="Version 4.2" />
+
+        <Preference
+            app:key="github"
+            app:title="@string/settings_app_github" />
+
+        <Preference
+            app:key="discord"
+            app:title="@string/settings_app_discord" />
     </PreferenceCategory>
 
 </PreferenceScreen>
