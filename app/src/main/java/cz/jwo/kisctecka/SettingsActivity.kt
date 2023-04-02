@@ -40,11 +40,13 @@ class SettingsActivity : AppCompatActivity() {
 
             preferenceManager.sharedPreferences?.registerOnSharedPreferenceChangeListener(this)
 
-            findPreference<Preference>("version")!!
-                .setOnPreferenceClickListener {
-                    startActivity(Intent(requireContext(), VersionActivity::class.java))
-                    true
-                }
+            findPreference<Preference>("version")!!.apply {
+           setOnPreferenceClickListener {
+                startActivity(Intent(requireContext(), VersionActivity::class.java))
+                true
+            }
+                summary = getString(R.string.settings_app_version_summary, BuildConfig.VERSION_NAME)
+            }
             findPreference<Preference>("github")!!
                 .setOnPreferenceClickListener {
                     launchGitHub(requireContext())

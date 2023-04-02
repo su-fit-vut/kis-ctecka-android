@@ -87,4 +87,5 @@ SOFTWARE.</string>
     <string name="version_button_discord" translatable="false">Discord</string>
     <string name="settings_app_github">GitHub page of the application</string>
     <string name="settings_app_discord">Discord channel <i>#kis-ctecka</i></string>
+    <string name="settings_app_version_summary" translatable="false">KIS Čtečka pro Android v%s</string>
 </resources>
