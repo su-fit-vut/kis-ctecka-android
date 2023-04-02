@@ -53,15 +53,18 @@
         <Preference
             app:key="version"
             app:title="@string/settings_app_version"
-            tools:summary="Version 4.2" />
+            tools:summary="Version 4.2"
+            app:icon="@drawable/round_info_24" />
 
         <Preference
             app:key="github"
-            app:title="@string/settings_app_github" />
+            app:title="@string/settings_app_github"
+            app:icon="@drawable/round_language_24" />
 
         <Preference
             app:key="discord"
-            app:title="@string/settings_app_discord" />
+            app:title="@string/settings_app_discord"
+            app:icon="@drawable/round_chat_24" />
     </PreferenceCategory>
 
 </PreferenceScreen>
