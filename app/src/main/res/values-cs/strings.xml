@@ -39,4 +39,26 @@
     <string name="nfc_unavailable_title">NFC není dostupné</string>
     <string name="nfc_unavailable_text">Tuto aplikaci je možné používat pouze na zařízeních s NFC.</string>
     <string name="error_icon_contentDescription">Chyba</string>
+    <string name="settings_app_version">Verze aplikace</string>
+    <string name="settings_section_info">Informace</string>
+    <string name="title_activity_version">Informace o verzi</string>
+    <string name="action_settings">Nastavení</string>
+    <string name="version_prop_package_name">Název balíčku:</string>
+    <string name="version_prop_version_name">Verze:</string>
+    <string name="version_prop_version_code">Kód verze:</string>
+    <string name="version_prop_first_install_date">Datum instalace:</string>
+    <string name="version_prop_last_install_date">Datum poslední aktualizace:</string>
+    <string name="about_authors_title">Autoři</string>
+    <string name="about_license_title">Licence</string>
+    <string name="about_3rd_party_title">Upozornění ohledně softwaru třetích stran</string>
+    <string name="about_3rd_party">Tato aplikace obsahuje software třetích stran
+    distribuovaných pod licencí Apache 2.0:\n
+    \n
+      • Material Icons\n
+    \n
+      • Android NFC tag class fix (https://gitlab.com/-/snippets/2522880)\n
+    \n
+    Celý text licence Apache 2.0: https://www.apache.org/licenses/LICENSE-2.0</string>
+    <string name="settings_app_github">GitHubová stránka aplikace</string>
+    <string name="settings_app_discord">Discord kanál <i>#kis-ctecka</i></string>
 </resources>

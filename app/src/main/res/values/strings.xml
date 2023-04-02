@@ -51,9 +51,9 @@
     <string name="version_prop_first_install_date">Installation date:</string>
     <string name="version_prop_last_install_date">Last upgrade date:</string>
     <string name="about_authors_title">Authors</string>
-    <string name="about_authors"><b>2023</b> Jiří Wolker &lt;kisctecka@jwo.cz, xwolke00@su.fit.vutbr.cz&gt;</string>
+    <string name="about_authors" translatable="false"><b>2023</b> Jiří Wolker &lt;kisctecka@jwo.cz, xwolke00@su.fit.vutbr.cz&gt;</string>
     <string name="about_license_title">License</string>
-    <string name="about_license">MIT License\n
+    <string name="about_license" translatable="false">MIT License\n
 \n
 Copyright (c) 2023 Jiří Wolker\n
 \n
@@ -83,8 +83,8 @@ SOFTWARE.</string>
       • Android NFC tag class fix (https://gitlab.com/-/snippets/2522880)\n
     \n
     Full Apache 2.0 license text: https://www.apache.org/licenses/LICENSE-2.0</string>
-    <string name="version_button_github">GitHub</string>
-    <string name="version_button_discord">Discord</string>
+    <string name="version_button_github" translatable="false">GitHub</string>
+    <string name="version_button_discord" translatable="false">Discord</string>
     <string name="settings_app_github">GitHub page of the application</string>
     <string name="settings_app_discord">Discord channel <i>#kis-ctecka</i></string>
 </resources>
