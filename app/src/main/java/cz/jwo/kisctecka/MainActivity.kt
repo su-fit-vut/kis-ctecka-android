@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var logView: TextView
     private val readerStateBroadcastReceiver = ReaderStateBroadcastReceiver()
 
-    private lateinit var nfcAdapter: NfcAdapter
+    private var nfcAdapter: NfcAdapter?=null
 
     private lateinit var statusTextView: TextView
 
@@ -92,7 +92,15 @@ class MainActivity : AppCompatActivity() {
             startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
         }
 
-        nfcAdapter = NfcAdapter.getDefaultAdapter(this)
+        NfcAdapter.getDefaultAdapter(this).takeUnless { resources.getBoolean(R.bool.pretend_having_no_nfc) }.let {
+            if (it!=null) {
+                nfcAdapter  =it
+            } else {
+                finish()
+                startActivity(Intent(this@MainActivity, NfcNotAvailableActivity::class.java))
+                return
+            }
+        }
         cameraManager = getSystemService(CAMERA_SERVICE) as CameraManager
         powerManager = getSystemService(POWER_SERVICE) as PowerManager
 
@@ -128,7 +136,7 @@ class MainActivity : AppCompatActivity() {
         super.onPause()
 
         Log.d(TAG, "Disabling foreground NFC dispatch.")
-        nfcAdapter.disableForegroundDispatch(this)
+        nfcAdapter?.disableForegroundDispatch(this)
 
         proximityWakeLock?.release()
     }
@@ -150,7 +158,7 @@ class MainActivity : AppCompatActivity() {
             if (VERSION.SDK_INT >= VERSION_CODES.S) PendingIntent.FLAG_MUTABLE else 0
         )
 
-        nfcAdapter.enableForegroundDispatch(
+        nfcAdapter?.enableForegroundDispatch(
             this,
             pendingIntent,
             null,
