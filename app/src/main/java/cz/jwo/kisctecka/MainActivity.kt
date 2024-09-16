@@ -185,6 +185,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun restartActivity() {
         intent.let {
+            overridePendingTransition(0, 0)
             finish()
             startActivity(it)
         }
