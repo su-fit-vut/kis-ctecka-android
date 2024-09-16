@@ -52,6 +52,11 @@ class SettingsActivity : AppCompatActivity() {
                     launchGitHub(requireContext())
                     true
                 }
+            findPreference<Preference>("gitlab")!!
+                .setOnPreferenceClickListener {
+                    launchGitHub(requireContext())
+                    true
+                }
             findPreference<Preference>("discord")!!
                 .setOnPreferenceClickListener {
                     launchDiscord(requireContext())

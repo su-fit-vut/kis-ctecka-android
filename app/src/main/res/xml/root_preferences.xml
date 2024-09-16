@@ -62,6 +62,11 @@
             app:icon="@drawable/round_language_24" />
 
         <Preference
+            app:key="gitlab"
+            app:title="@string/settings_app_gitlab"
+            app:icon="@drawable/round_language_24" />
+
+        <Preference
             app:key="discord"
             app:title="@string/settings_app_discord"
             app:icon="@drawable/round_chat_24" />

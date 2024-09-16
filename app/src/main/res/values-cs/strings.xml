@@ -60,5 +60,6 @@
     \n
     Celý text licence Apache 2.0: https://www.apache.org/licenses/LICENSE-2.0</string>
     <string name="settings_app_github">GitHubová stránka aplikace</string>
+    <string name="settings_app_gitlab">Projekt na GitLabu</string>
     <string name="settings_app_discord">Discord kanál <i>#kis-ctecka</i></string>
 </resources>
