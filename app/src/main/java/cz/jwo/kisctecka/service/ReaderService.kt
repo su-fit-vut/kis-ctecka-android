@@ -7,6 +7,8 @@ import android.content.Intent
 import android.nfc.NfcAdapter
 import android.os.IBinder
 import android.util.Log
+import cz.jwo.kisctecka.AppPreferences
+import cz.jwo.kisctecka.io.net.lowlevel.CardData
 import cz.jwo.kisctecka.io.net.www.WebServer
 import cz.jwo.kisctecka.io.nfc.TagReader
 import cz.jwo.kisctecka.io.nfc.TagReadingException
@@ -19,6 +21,7 @@ import kotlin.properties.Delegates
 const val TAG = "ReaderService"
 
 class ReaderService : Service(), ClientCommandReceiver {
+    private var lastCardData: CardData? = null
     private var readerMode: ReaderMode by Delegates.observable(ReaderMode.Idle) { _, old, new ->
         Log.d(TAG, "Changing mode $old → $new")
         sendBroadcast(ReaderStateBroadcast.ReaderModeChanged(readerMode))
@@ -26,9 +29,13 @@ class ReaderService : Service(), ClientCommandReceiver {
 
     private var webServer: WebServer? = null
 
+    private lateinit var appPreferences: AppPreferences;
+
     override fun onCreate() {
         super.onCreate()
         Log.d(TAG, "onCreate")
+
+        appPreferences = AppPreferences(this)
 
         sendBroadcast(ReaderStateBroadcast.ReaderInitStart)
     }
@@ -94,7 +101,19 @@ class ReaderService : Service(), ClientCommandReceiver {
         when (command) {
             is ReaderServiceCommand.CardDetected ->
                 onCardDetected(command)
+
+            is ReaderServiceCommand.RepeatCard -> onCardRepeat()
         }
+    }
+
+    private fun onCardRepeat() {
+        Thread {
+            val cardData = lastCardData
+            if (cardData != null) {
+                Log.d(TAG, "Repeat card data.")
+                sendCardData(cardData)
+            }
+        }.start()
     }
 
     private fun onCardDetected(command: ReaderServiceCommand.CardDetected) {
@@ -111,23 +130,30 @@ class ReaderService : Service(), ClientCommandReceiver {
                     null
                 }
             if (cardData != null) {
-                Log.d(TAG, "Read card data.")
-                webServer.let {
-                    if (it != null) {
-                        if (readerMode != ReaderMode.Idle) {
-                            Log.d(TAG, "Sending it.")
-                            it.sendCardData(readerMode, cardData)
-                            sendBroadcast(ReaderStateBroadcast.CardReadStatus.CardReadingSuccess)
-                        } else {
-                            Log.d(TAG, "We did not expect a card. Ignoring it.")
-                            sendBroadcast(ReaderStateBroadcast.CardReadStatus.CardNotExpected)
-                        }
-                    } else {
-                        Log.d(TAG, "Web server is not running. Ignoring it.")
-                    }
+                if (lastCardData == null || appPreferences.repeatCardMode == AppPreferences.Companion.RepeatCardMode.Last) {
+                    lastCardData = cardData
                 }
+                Log.d(TAG, "Read card data.")
+                sendCardData(cardData)
             }
         }.start()
+    }
+
+    private fun sendCardData(cardData: CardData) {
+        webServer.let {
+            if (it != null) {
+                if (readerMode != ReaderMode.Idle) {
+                    Log.d(TAG, "Sending card data.")
+                    it.sendCardData(readerMode, cardData)
+                    sendBroadcast(ReaderStateBroadcast.CardReadStatus.CardReadingSuccess)
+                } else {
+                    Log.d(TAG, "We did not expect a card. Ignoring it.")
+                    sendBroadcast(ReaderStateBroadcast.CardReadStatus.CardNotExpected)
+                }
+            } else {
+                Log.d(TAG, "Web server is not running. Ignoring it.")
+            }
+        }
     }
 
 

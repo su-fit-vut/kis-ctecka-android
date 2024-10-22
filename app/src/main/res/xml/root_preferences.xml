@@ -1,7 +1,7 @@
 <PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-    <PreferenceCategory app:title="@string/settings_section_behavior">
+    <PreferenceCategory app:title="@string/settings_section_behavior_camera">
 
         <SwitchPreferenceCompat
             app:key="flash_on_read"
@@ -47,8 +47,35 @@
             app:summaryOn="@string/settings_proximity_sensor_summary_on" />
     </PreferenceCategory>
 
-    <PreferenceCategory
-        app:title="@string/settings_section_info">
+    <PreferenceCategory app:title="@string/settings_section_behavior_repeat_card">
+        <SwitchPreferenceCompat
+            app:key="show_repeat_button"
+            app:icon="@drawable/round_refresh_24"
+            app:title="@string/settings_show_repeat_button"
+            android:summaryOff="@string/settings_show_repeat_button_off"
+            android:summaryOn="@string/settings_show_repeat_button_on" />
+        <SwitchPreferenceCompat
+            app:key="repeat_on_volume_up"
+            app:icon="@drawable/round_swipe_up_alt_24"
+            app:title="@string/settings_repeat_on_volume_up"
+            android:summaryOff="@string/settings_repeat_on_volume_up_off"
+            android:summaryOn="@string/settings_repeat_on_volume_up_on" />
+        <SwitchPreferenceCompat
+            app:key="repeat_on_volume_down"
+            app:icon="@drawable/round_swipe_down_alt_24"
+            app:title="@string/settings_repeat_on_volume_down"
+            android:summaryOff="@string/settings_repeat_on_volume_down_off"
+            android:summaryOn="@string/settings_repeat_on_volume_down_on" />
+        <ListPreference
+            app:key="repeat_card_mode"
+            app:title="@string/settings_repeat_mode"
+            app:entries="@array/settings_repeat_mode_names"
+            android:entryValues="@array/settings_repeat_mode_values"
+            app:defaultValue="@string/settings_repeat_mode_default"
+            app:useSimpleSummaryProvider="true" />
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/settings_section_info">
 
         <Preference
             app:key="version"

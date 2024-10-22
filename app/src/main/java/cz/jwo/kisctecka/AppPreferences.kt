@@ -19,6 +19,14 @@ class AppPreferences(private val context: Context, private val sharedPreferences
     val useBlackTheme get() = sharedPreferences.getBoolean(PREFERENCE_BLACK_THEME, false)
     val useProximitySensor get() = sharedPreferences.getBoolean(PREFERENCE_USE_PROXIMITY_SENSOR, false)
 
+    val showRepeatButton get() = sharedPreferences.getBoolean(PREFERENCE_SHOW_REPEAT_BUTTON, false)
+    val repeatOnVolumeUp get() = sharedPreferences.getBoolean(PREFERENCE_REPEAT_ON_VOLUME_UP, false)
+    val repeatOnVolumeDown get() = sharedPreferences.getBoolean(PREFERENCE_REPEAT_ON_VOLUME_DOWN, false)
+    private val repeatCardModeRaw get() = sharedPreferences.getString(PREFERENCE_REPEAT_CARD_MODE, defaultRepeatCardMode)!!
+    val repeatCardMode get() = parseRepeatCardMode(context, repeatCardModeRaw)
+
+    private val defaultRepeatCardMode = context.resources.getStringArray(R.array.settings_repeat_mode_values).first()
+
     companion object {
         const val PREFERENCE_FLASH_ON_READ = "flash_on_read"
         const val PREFERENCE_FLASH_BRIGHTNESS = "flash_brightness"
@@ -27,5 +35,22 @@ class AppPreferences(private val context: Context, private val sharedPreferences
         const val PREFERENCE_KEEP_SCREEN_ON = "keep_screen_on"
         const val PREFERENCE_BLACK_THEME = "black_theme"
         const val PREFERENCE_USE_PROXIMITY_SENSOR = "use_proximity_sensor"
+        const val PREFERENCE_SHOW_REPEAT_BUTTON = "show_repeat_button"
+        const val PREFERENCE_REPEAT_ON_VOLUME_UP = "repeat_on_volume_up"
+        const val PREFERENCE_REPEAT_ON_VOLUME_DOWN = "repeat_on_volume_down"
+        const val PREFERENCE_REPEAT_CARD_MODE = "repeat_card_mode"
+
+        enum class RepeatCardMode {
+            Last,
+            First
+        }
+
+        fun parseRepeatCardMode(context: Context, modeName: String): RepeatCardMode {
+            return context.resources.getStringArray(R.array.settings_repeat_mode_values)
+                .zip(RepeatCardMode.entries)
+                .toMap()
+                .get(modeName)
+                ?: throw IllegalArgumentException("Invalid card repeat mode")
+        }
     }
 }

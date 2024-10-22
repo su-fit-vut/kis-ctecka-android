@@ -14,6 +14,9 @@ sealed class ReaderServiceCommand : Parcelable {
     @Parcelize
     data class CardDetected(val nfcIntent: Intent) : ReaderServiceCommand()
 
+    @Parcelize
+    class RepeatCard : ReaderServiceCommand()
+
     companion object {
         const val ACTION = "cz.jwo.kisctecka.ReaderServiceCommand.COMMAND"
         const val EXTRA_COMMAND = "cz.jwo.kisctecka.ReaderServiceCommand.EXTRA_COMMAND"

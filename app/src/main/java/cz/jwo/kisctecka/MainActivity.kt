@@ -18,6 +18,8 @@ import android.os.Bundle
 import android.os.PowerManager
 import android.transition.TransitionManager
 import android.util.Log
+import android.view.KeyEvent
+import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
@@ -88,6 +90,10 @@ class MainActivity : AppCompatActivity() {
             restartService()
         }
 
+        findViewById<Button>(R.id.repeat_card_button).setOnClickListener {
+            repeatCard()
+        }
+
         findViewById<Button>(R.id.settingsButton).setOnClickListener {
             startActivity(Intent(this@MainActivity, SettingsActivity::class.java))
         }
@@ -122,6 +128,40 @@ class MainActivity : AppCompatActivity() {
                 myPackage.versionName,
                 DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM).format(Date(myPackage.lastUpdateTime)),
             )
+        }
+    }
+
+    private fun repeatCard() {
+        startService(ReaderServiceCommand.RepeatCard().makeIntent(this@MainActivity))
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        when (keyCode) {
+            KeyEvent.KEYCODE_VOLUME_UP, KeyEvent.KEYCODE_VOLUME_DOWN -> {
+                return true
+            }
+
+            else -> return super.onKeyUp(keyCode, event)
+        }
+    }
+
+    override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
+        when (keyCode) {
+            KeyEvent.KEYCODE_VOLUME_UP -> {
+                if (appPreferences.repeatOnVolumeUp) {
+                    repeatCard()
+                }
+                return true
+            }
+
+            KeyEvent.KEYCODE_VOLUME_DOWN -> {
+                if (appPreferences.repeatOnVolumeDown) {
+                    repeatCard()
+                }
+                return true
+            }
+
+            else -> return super.onKeyUp(keyCode, event)
         }
     }
 
@@ -176,6 +216,9 @@ class MainActivity : AppCompatActivity() {
         } else {
             null
         }
+
+        findViewById<View>(R.id.repeat_card_button).visibility =
+            if (appPreferences.showRepeatButton) View.VISIBLE else View.INVISIBLE
 
         window.setFlags(
             if (appPreferences.keepScreenOn) WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON else 0,

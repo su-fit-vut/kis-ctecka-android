@@ -14,7 +14,7 @@
     <string name="status_disconnected_no_address">Odpojeno (neznámá adresa)</string>
     <string name="button_settings">Nastavení</string>
     <string name="settings_title">Nastavení</string>
-    <string name="settings_section_behavior">Chování čtečky</string>
+    <string name="settings_section_behavior_camera">Chování kontrolky</string>
     <string name="settings_flash_on_read">Bliknout kamerou po přečtení karty</string>
     <string name="settings_flash_only_on_success">Bliknout jen, když čtení uspělo</string>
     <string name="settings_flash_intensity">Jas bliknutí</string>

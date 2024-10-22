@@ -3,4 +3,5 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
     <dimen name="license_page_horizontal_margin">16dp</dimen>
+    <dimen name="repeat_button_corner_radius">8dp</dimen>
 </resources>
