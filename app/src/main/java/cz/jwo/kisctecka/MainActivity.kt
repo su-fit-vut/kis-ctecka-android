@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var logView: TextView
     private val readerStateBroadcastReceiver = ReaderStateBroadcastReceiver()
 
-    private var nfcAdapter: NfcAdapter?=null
+    private var nfcAdapter: NfcAdapter? = null
 
     private lateinit var statusTextView: TextView
 
@@ -99,8 +99,8 @@ class MainActivity : AppCompatActivity() {
         }
 
         NfcAdapter.getDefaultAdapter(this).takeUnless { resources.getBoolean(R.bool.pretend_having_no_nfc) }.let {
-            if (it!=null) {
-                nfcAdapter  =it
+            if (it != null) {
+                nfcAdapter = it
             } else {
                 finish()
                 startActivity(Intent(this@MainActivity, NfcNotAvailableActivity::class.java))
@@ -126,7 +126,8 @@ class MainActivity : AppCompatActivity() {
             findViewById<TextView>(R.id.appVersion).text = getString(
                 R.string.brief_version_information,
                 myPackage.versionName,
-                DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM).format(Date(myPackage.lastUpdateTime)),
+                DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.MEDIUM)
+                    .format(Date(myPackage.lastUpdateTime)),
             )
         }
     }
