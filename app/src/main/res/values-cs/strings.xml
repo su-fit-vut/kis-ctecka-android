@@ -62,4 +62,20 @@
     <string name="settings_app_github">GitHubová stránka aplikace</string>
     <string name="settings_app_gitlab">Projekt na GitLabu</string>
     <string name="settings_app_discord">Discord kanál <i>#kis-ctecka</i></string>
+    <string name="settings_show_repeat_button">Tlačítko „Opakovat kartu“</string>
+    <string name="settings_show_repeat_button_off">Na obrazovce se zobrazí tlačítko pro opakování karty</string>
+    <string name="settings_show_repeat_button_on">Na obrazovce se nebude zobrazovat tlačítko opakování karty</string>
+    <string name="settings_repeat_on_volume_up">Zopakovat kartu při stisku Vol+</string>
+    <string name="settings_repeat_on_volume_up_off">Stisk tlačítka hlasitosti neudělá nic</string>
+    <string name="settings_repeat_on_volume_up_on">Stisk tlačítka hlasitosti zopakuje kartu</string>
+    <string name="settings_repeat_on_volume_down">Zopakovat kartu při stisku Vol–</string>
+    <string name="settings_repeat_on_volume_down_off">Stisk tlačítka hlasitosti neudělá nic</string>
+    <string name="settings_repeat_on_volume_down_on">Stisk tlačítka hlasitosti zopakuje kartu</string>
+    <string name="settings_repeat_mode">Režim opakování karty</string>
+    <string name="settings_section_behavior_repeat_card">Uložení a opakování karty</string>
+    <string name="repeat_card">Opakovat kartu</string>
+    <string-array name="settings_repeat_mode_names">
+        <item>Zopakovat poslední úspěšně načtenou kartu</item>
+        <item>Zopakovat první úspěšně načtenou kartu</item>
+    </string-array>
 </resources>
