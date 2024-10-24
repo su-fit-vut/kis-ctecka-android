@@ -44,10 +44,10 @@ android {
 }
 
 dependencies {
-    implementation 'io.ktor:ktor-server-core:2.3.0'
-    implementation 'io.ktor:ktor-server-netty:2.2.4'
-    implementation 'io.ktor:ktor-server-websockets:2.2.4'
-    implementation("io.ktor:ktor-network-tls-certificates:2.2.4")
+    implementation 'io.ktor:ktor-server-core:3.0.0'
+    implementation 'io.ktor:ktor-server-netty:3.0.0'
+    implementation 'io.ktor:ktor-server-websockets:3.0.0'
+    implementation('io.ktor:ktor-network-tls-certificates:3.0.0')
     implementation 'androidx.core:core-ktx:1.13.1'
     //noinspection GradleDependency – 1.7.0 is broken.
     implementation 'androidx.appcompat:appcompat:1.6.1'
