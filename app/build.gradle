@@ -31,11 +31,13 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
-
     packagingOptions {
-        exclude("META-INF/INDEX.LIST")
-        merge("META-INF/io.netty.versions.properties")
+        resources {
+            merges += ['META-INF/io.netty.versions.properties']
+            excludes += ['META-INF/INDEX.LIST']
+        }
     }
+
 }
 
 dependencies {
