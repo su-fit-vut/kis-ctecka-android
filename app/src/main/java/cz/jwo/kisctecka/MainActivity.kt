@@ -76,7 +76,8 @@ class MainActivity : AppCompatActivity() {
             readerStateBroadcastReceiver,
             IntentFilter(
                 ReaderStateBroadcast.ACTION,
-            )
+            ),
+            RECEIVER_NOT_EXPORTED,
         )
 
         logView = findViewById(R.id.logView)!!
