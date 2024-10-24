@@ -229,6 +229,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun restartActivity() {
         intent.let {
+            @Suppress("DEPRECATION")
             overridePendingTransition(0, 0)
             finish()
             startActivity(it)
