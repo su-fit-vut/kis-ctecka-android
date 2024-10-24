@@ -22,7 +22,7 @@ import kotlin.properties.Delegates
 const val TAG = "WebServer"
 
 class WebServer(private val commandReceiver: ClientCommandReceiver) {
-    private var server: NettyApplicationEngine = embeddedServer(Netty, port = 8080) {
+    private var server = embeddedServer(Netty, port = 8080) {
         install(WebSockets) {
             pingPeriodMillis = 15_000
             timeoutMillis = 60_000
