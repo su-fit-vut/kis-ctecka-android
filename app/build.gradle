@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace 'cz.jwo.kisctecka'
-    compileSdk 34
+    compileSdk 35
 
     defaultConfig {
         applicationId "cz.jwo.kisctecka"
         minSdk 21
-        targetSdk 34
+        targetSdk 35
         versionCode 1210
         versionName "1.2.1"
 
