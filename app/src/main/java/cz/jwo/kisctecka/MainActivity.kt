@@ -349,7 +349,7 @@ class MainActivity : AppCompatActivity() {
             networkInterface.interfaceAddresses.forEach { interfaceAddress ->
                 val addressString = interfaceAddress.address.hostAddress ?: interfaceAddress.address.toString()
                 Log.d(TAG, "      • addr: $addressString")
-                if (addressString.startsWith("10.10.20.")) {
+                if (addressString.startsWith("10.80.0.")) {
                     return getString(
                         R.string.status_disconnected_studklub_address,
                         getString(R.string.studklub_address, addressString.split('.').last().toString()),
